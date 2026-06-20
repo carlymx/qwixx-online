@@ -1,5 +1,7 @@
 [Leer en español →](README_ES.md)
 
+![qwixx-online](/public/imgs/0001.png)
+
 # Qwixx Online
 
 A full-stack multiplayer implementation of the dice game **Qwixx** using HTML5/CSS/JS, Node.js, and Socket.IO.

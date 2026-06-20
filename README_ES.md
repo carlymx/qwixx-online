@@ -1,5 +1,7 @@
 [Read in English →](README.md)
 
+![qwixx-online](/public/imgs/0001.png)
+
 # Qwixx Online
 
 Implementación multijugador del juego de dados **Qwixx** usando HTML5/CSS/JS, Node.js y Socket.IO.
