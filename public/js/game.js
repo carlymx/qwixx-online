@@ -7,6 +7,7 @@ const GameUI = {
   players: [],
   gameState: null,
   actionPending: false,
+  action1Marked: false,
   svgTemplate: null,
 
   initGame(gameState) {
@@ -14,6 +15,7 @@ const GameUI = {
     this.players = gameState.players;
     this.gameState = gameState;
     this.actionPending = false;
+    this.action1Marked = false;
     this.renderAll();
   },
 
@@ -104,7 +106,8 @@ const GameUI = {
 
         const canSelect = this.actionPending &&
           !fila.marked[i] && !fila.locked &&
-          val === sum && i > lastMarkedIdx;
+          val === sum && i > lastMarkedIdx &&
+          !(i === 10 && fila.count < 5);
 
         if (canSelect) {
           panelEl.classList.add('panel-selectable');
@@ -113,6 +116,7 @@ const GameUI = {
             Audio.playMark();
             App.socket.emit('action_1_choice', { color });
             GameUI.actionPending = false;
+            GameUI.action1Marked = true;
             const p = GameUI.players.find(p => p.id === GameUI.myPlayerId);
             if (p && p.filas && p.filas[color]) {
               p.filas[color].marked[i] = true;
@@ -294,7 +298,7 @@ const GameUI = {
       for (const c of colors) {
         if (dice[c] !== null) {
           const isLocked = game.lockedRows.includes(c);
-          html += `<div class="dice ${c}-dice animating${isLocked ? ' inactive' : ''}">${dice[c]}</div>`;
+          html += `<div class="dice ${c}-dice animating${isLocked ? ' inactive' : ''}"><span class="dice-dots">${this.dieFace(dice[c])}</span></div>`;
         }
       }
       html += '</div>';
@@ -363,9 +367,14 @@ const GameUI = {
       return numIdx > lastIdx;
     }
 
+    const warningHtml = !GameUI.action1Marked
+      ? `<div class="warning-banner">⚠️ No marcaste ningún número en la Acción 1. Si pasas ahora, recibirás <strong>-5 puntos</strong> de penalización.</div>`
+      : '';
+
     let html = `<div class="action-prompt">
       <h3>Acción 2: Elige una combinación</h3>
       <p>Selecciona un dado base + un dado de color para tachar</p>
+      ${warningHtml}
       <div class="action-options">
         ${data.availableColors.map(cd => {
           const base0Sum = data.bases[0] + cd.value;

@@ -452,6 +452,8 @@ io.on('connection', (socket) => {
     const game = table.game;
     const sum = game.dice.white[0] + game.dice.white[1];
     const pendingLocks = [];
+    const rowLabel = { red: 'Roja', yellow: 'Amarilla', green: 'Verde', blue: 'Azul' };
+    const action1Messages = [];
 
     for (const p of game.players) {
       const chosenColor = game.pendingChoices[p.id];
@@ -464,17 +466,30 @@ io.on('connection', (socket) => {
             filas: p.filas,
             penalties: p.penalties
           });
+          action1Messages.push(`${p.username} tachó ${sum} en fila ${rowLabel[chosenColor]}`);
           if (result.locked) {
             pendingLocks.push({ playerId: p.id, color: chosenColor });
           }
+        } else {
+          action1Messages.push(`${p.username} no pudo tachar (movimiento inválido)`);
         }
+      } else {
+        action1Messages.push(`${p.username} no tachó nada`);
       }
+    }
+
+    for (const msg of action1Messages) {
+      io.to(`table:${table.id}`).emit('chat_message', {
+        username: 'Sistema',
+        text: msg,
+        timestamp: Date.now(),
+        system: true
+      });
     }
 
     for (const lock of pendingLocks) {
       gameLogic.applyLock(game, lock.color);
       const player = game.players.find(p => p.id === lock.playerId);
-      const rowLabel = { red: 'Roja', yellow: 'Amarilla', green: 'Verde', blue: 'Azul' };
       io.to(`table:${table.id}`).emit('row_locked', {
         color: lock.color,
         playerId: lock.playerId

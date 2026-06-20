@@ -252,6 +252,7 @@ const App = {
         GameUI.gameState.phase = 'rolling';
       }
       GameUI.actionPending = false;
+      GameUI.action1Marked = false;
       GameUI.renderDice();
       GameUI.renderScores();
       // Status

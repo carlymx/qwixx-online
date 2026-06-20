@@ -49,6 +49,19 @@ Scoring: `n × (n+1) / 2` per row (where n = marked numbers), minus penalties.
 
 ## Changelog
 
+### v0.8.7 — 2026-06-21
+- Penalty warning banner in Action 2 if the active player didn't mark anything in Action 1
+- Colored dice now show Unicode faces (like white dice), enlarged to 52px
+
+### v0.8.6 — 2026-06-21
+- Table chat now shows each player's Action 1 choices (who marked what, who passed)
+- Action 1 last cell no longer shows as selectable with less than 5 marks (matches server validation)
+
+### v0.8.5 — 2026-06-21
+- Fixed `canMark` requirement from 4 to 5 to match lock condition (`count >= 5`)
+- Numbers on SVG board are now clickable (not just the panel behind them)
+- Status text now updates immediately after Action 1 choice
+
 ### v0.8.0 — 2026-06-20
 - Fixed lock detection for green/blue rows (was checking value 12 instead of 2)
 - SVG locks now show open/closed state based on row lock status

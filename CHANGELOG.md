@@ -3,6 +3,34 @@
 > **Formato:** [Keep a Changelog](https://keepachangelog.com/)
 > **Versiones:** [SemVer](https://semver.org/)
 
+## [0.8.7] — 2026-06-21
+
+### Añadido
+
+- **Advertencia de penalización**: si el jugador activo no marcó nada en la Acción 1, al llegar a la Acción 2 se muestra un banner amarillo recordándole que si pasa recibirá -5 puntos.
+
+### Cambiado
+
+- **Dados de color**: ahora muestran caras Unicode (⚀⚁⚂⚃⚄⚅) igual que los dados blancos, con tamaño aumentado a 52px.
+
+## [0.8.6] — 2026-06-21
+
+### Añadido
+
+- **Chat de mesa**: ahora se muestran las jugadas de cada jugador en la Acción 1 (quién tachó qué, quién no pudo, quién pasó).
+
+### Cambiado
+
+- **Selección Acción 1**: el último número de cada fila ya no se muestra seleccionable si hay menos de 5 tachados (coincide con la validación del servidor).
+
+## [0.8.5] — 2026-06-21
+
+### Cambiado
+
+- **`canMark`**: requisito de tachados previos para marcar el último número de 4 a 5, para coincidir con la condición de bloqueo (`count >= 5`). Ahora se necesitan 5 marcas antes de marcar el casillero final.
+- **Cartón SVG**: los números ahora también son cliqueables (no solo el panel trasero), facilitando la selección en Acción 1.
+- **Estado de juego**: al elegir en Acción 1, el texto de estado se actualiza inmediatamente a "Esperando a [jugador] en la Acción 1..." en lugar de quedar congelado.
+
 ## [0.8.0] — 2026-06-20
 
 ### Añadido

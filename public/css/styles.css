@@ -585,7 +585,7 @@ body {
 .dice.green-dice { background: var(--dice-green); }
 .dice.blue-dice { background: var(--dice-blue); }
 .dice.inactive { opacity: 0.2; }
-.dice .dice-dots { font-size: 44px; line-height: 1; }
+.dice .dice-dots { font-size: 52px; line-height: 1; }
 .roll-area { margin-top: var(--spacing-md); }
 
 /* Dice animation */
@@ -730,6 +730,21 @@ body {
   color: var(--text-muted);
 }
 .action-prompt .timer.warning { color: var(--accent-danger); font-weight: var(--font-weight-bold); }
+.action-prompt .warning-banner {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  color: #5a4a00;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+  font-size: 13px;
+  text-align: left;
+}
+[data-theme="dark"] .action-prompt .warning-banner {
+  background: #3d2e00;
+  border-color: #8a6d00;
+  color: #ffd966;
+}
 
 /* Game over modal */
 .results-list {

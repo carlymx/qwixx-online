@@ -49,6 +49,19 @@ Puntuación: `n × (n+1) / 2` por fila (donde n = números marcados), menos pena
 
 ## Changelog
 
+### v0.8.7 — 2026-06-21
+- Banner de advertencia en Acción 2 si el jugador activo no marcó nada en Acción 1
+- Dados de color ahora muestran caras Unicode como los blancos, ampliados a 52px
+
+### v0.8.6 — 2026-06-21
+- Chat de mesa ahora muestra las jugadas de cada jugador en Acción 1 (quién tachó qué, quién pasó)
+- Último número de cada fila ya no se muestra seleccionable con menos de 5 tachados
+
+### v0.8.5 — 2026-06-21
+- Corregido `canMark`: requisito de 4 a 5 para coincidir con condición de bloqueo
+- Números del cartón SVG ahora cliqueables (no solo el panel trasero)
+- Texto de estado se actualiza inmediatamente tras elegir en Acción 1
+
 ### v0.8.0 — 2026-06-20
 - Corregida detección de bloqueo en filas verde/azul (usaba valor 12 en vez de 2)
 - Candados SVG ahora muestran estado abierto/cerrado según bloqueo de fila
