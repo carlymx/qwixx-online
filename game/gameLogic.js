@@ -35,7 +35,7 @@ function canMark(fila, color, number) {
   const values = ROW_VALUES[color];
   const numIdx = values.indexOf(number);
   if (numIdx === -1) return false;
-  if (numIdx === 10 && getMarkedCount(fila.marked) < 4) return false;
+  if (numIdx === 10 && getMarkedCount(fila.marked) < 5) return false;
   return numIdx > getLastMarkedIndex(fila.marked);
 }
 

@@ -339,7 +339,7 @@ const GameUI = {
         for (let i = 0; i < 11; i++) {
           if (fila.marked[i]) count++;
         }
-        if (count < 4) return false;
+        if (count < 5) return false;
       }
       let lastIdx = -1;
       for (let i = 0; i < 11; i++) {
