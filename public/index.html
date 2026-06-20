@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <!-- Qwixx Online - multiplayer dice game
+       Copyright (c) 2026 carlymx
+       SPDX-License-Identifier: GPL-3.0-only -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qwixx Online</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
+  <script>const VERSION = 'v0.8.0';</script>
+<body>
+  <div id="app">
+
+    <!-- ═══ LOGIN VIEW ═══ -->
+    <div id="view-login" class="view active">
+      <div class="login-box">
+        <h1>🎲 Qwixx</h1>
+        <p class="subtitle">Juego de dados multijugador online</p>
+        <div class="input-group">
+          <label for="login-name">Nombre de usuario</label>
+          <input type="text" id="login-name" class="input" placeholder="Tu nombre..." maxlength="20" autocomplete="off">
+        </div>
+        <div id="login-error" class="error-msg"></div>
+        <button id="btn-login" class="btn btn-primary" style="width:100%;justify-content:center;">Entrar</button>
+      </div>
+    </div>
+
+    <!-- ═══ LOBBY VIEW ═══ -->
+    <div id="view-lobby" class="view">
+      <header class="topbar">
+        <span class="logo">🎲 Qwixx <span class="version">v0.8.0</span></span>
+        <div class="spacer"></div>
+        <span class="clock" id="clock-lobby">--:--:--</span>
+        <button id="btn-help" class="btn-icon" title="Ayuda">❓</button>
+        <button id="btn-theme" class="btn-icon" title="Cambiar tema"><span id="theme-icon">🌙</span></button>
+        <span id="lobby-username" class="username-badge"></span>
+      </header>
+
+      <div class="lobby-layout">
+        <div class="lobby-main">
+          <!-- Players -->
+          <div class="lobby-section card">
+            <h2>👥 Jugadores Conectados <span class="count" id="players-count"></span></h2>
+            <div class="players-grid" id="players-list"></div>
+          </div>
+
+          <!-- Tables -->
+          <div class="lobby-section card">
+            <h2>🎮 Mesas de Juego</h2>
+            <div class="tables-list" id="tables-list"></div>
+            <button id="btn-create-table" class="btn btn-success" style="margin-top:var(--spacing-sm);">+ Crear Mesa</button>
+          </div>
+
+          <!-- Rankings -->
+          <div class="lobby-section card">
+            <h2>🏆 Ranking Global <button id="btn-refresh-rankings" class="btn-icon" title="Actualizar" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:14px;">🔄</button></h2>
+            <ol class="rankings-list" id="rankings-list"></ol>
+          </div>
+        </div>
+
+        <!-- Chat -->
+        <div class="chat-panel">
+          <div class="chat-header">💬 Chat Global</div>
+          <div class="chat-messages" id="lobby-chat-messages"></div>
+          <div class="chat-input-area">
+            <input type="text" id="lobby-chat-input" class="input" placeholder="Escribe un mensaje..." maxlength="500">
+            <button id="lobby-chat-send" class="btn btn-primary">▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ GAME VIEW ═══ -->
+    <div id="view-game" class="view">
+      <header class="topbar">
+        <span class="logo">🎲 Qwixx <span class="version">v0.8.0</span></span>
+        <span id="game-table-name" class="topbar-title"></span>
+        <div class="spacer"></div>
+        <span class="clock" id="clock-game">--:--:--</span>
+        <span id="turn-timer" class="text-muted" style="font-size:13px;"></span>
+        <button id="btn-theme-game" class="btn-icon" title="Cambiar tema"><span id="theme-icon-game">🌙</span></button>
+        <button id="btn-leave-game" class="btn btn-secondary" style="font-size:13px;padding:4px 12px;">Salir</button>
+      </header>
+
+      <div class="game-layout" id="game-content">
+        <div class="game-boards">
+          <!-- Own board -->
+          <div class="board" id="my-board">
+            <div class="text-muted">Esperando partida...</div>
+          </div>
+          <div class="game-status" id="game-status"></div>
+
+          <!-- Other boards -->
+          <div>
+            <div style="font-weight:600;margin-bottom:var(--spacing-sm);font-size:var(--font-size-sm);color:var(--text-secondary);">OTROS JUGADORES</div>
+            <div class="others-boards" id="others-boards"></div>
+          </div>
+        </div>
+
+        <div class="game-sidebar">
+          <!-- Dice area -->
+          <div id="dice-area" class="dice-area">
+            <div class="text-muted">Esperando turno...</div>
+          </div>
+
+          <!-- Scores -->
+          <div class="scores-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Jugador</th>
+                  <th style="text-align:center;">Penal.</th>
+                  <th style="text-align:right;">Puntos</th>
+                </tr>
+              </thead>
+              <tbody id="scores-body"></tbody>
+            </table>
+          </div>
+
+          <!-- Game chat -->
+          <div class="game-chat">
+            <div class="chat-header">💬 Chat</div>
+            <div class="chat-messages" id="game-chat-messages"></div>
+            <div class="chat-input-area">
+              <input type="text" id="game-chat-input" class="input" placeholder="Escribe..." maxlength="500">
+              <button id="game-chat-send" class="btn btn-primary">▶</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ MODALS ═══ -->
+  <!-- Create Table Modal -->
+  <div class="modal-overlay" id="modal-create-table">
+    <div class="modal-content">
+      <h2>Crear Mesa</h2>
+      <div class="flex flex-col gap-sm" style="margin-bottom:var(--spacing-md);">
+        <label style="font-size:var(--font-size-sm);font-weight:500;">Nombre de la mesa</label>
+        <input type="text" id="create-table-name" class="input" placeholder="Mesa de juego..." maxlength="30">
+      </div>
+      <div class="flex flex-col gap-sm" style="margin-bottom:var(--spacing-md);">
+        <label style="font-size:var(--font-size-sm);font-weight:500;">Contraseña <span class="text-muted" style="font-weight:normal;">(opcional)</span></label>
+        <input type="password" id="create-table-password" class="input" placeholder="Dejar vacío para mesa pública" maxlength="20">
+      </div>
+      <div class="btn-row">
+        <button id="btn-create-table-cancel" class="btn btn-secondary">Cancelar</button>
+        <button id="btn-create-table-confirm" class="btn btn-primary">Crear</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/chat.js"></script>
+  <script src="js/lobby.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

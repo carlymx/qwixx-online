@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <!-- Qwixx Online - multiplayer dice game
+       Copyright (c) 2026 carlymx
+       SPDX-License-Identifier: GPL-3.0-only -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qwixx Online — Manual de Usuario</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <script>const VERSION = 'v0.8.0';</script>
+  <style>
+    :root {
+      --docs-sidebar-width: 260px;
+      --docs-header-height: 56px;
+    }
+
+    .docs-topbar {
+      display: flex;
+      align-items: center;
+      padding: var(--spacing-sm) var(--spacing-lg);
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      gap: var(--spacing-md);
+      height: var(--docs-header-height);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .docs-topbar .logo {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-heading);
+      color: var(--accent-primary);
+      text-decoration: none;
+    }
+    .docs-topbar .spacer { flex: 1; }
+    .docs-topbar .btn-icon {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 6px;
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      transition: background var(--transition-fast);
+    }
+    .docs-topbar .btn-icon:hover { background: var(--bg-tertiary); }
+    .docs-topbar .btn-back {
+      font-size: var(--font-size-sm);
+      color: var(--accent-primary);
+      text-decoration: none;
+    }
+    .docs-topbar .btn-back:hover { text-decoration: underline; }
+
+    .docs-wrapper {
+      display: flex;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .docs-sidebar {
+      width: var(--docs-sidebar-width);
+      position: sticky;
+      top: var(--docs-header-height);
+      height: calc(100vh - var(--docs-header-height));
+      overflow-y: auto;
+      border-right: 1px solid var(--border-color);
+      padding: var(--spacing-lg) 0;
+      flex-shrink: 0;
+      background: var(--bg-secondary);
+    }
+    .docs-sidebar nav ul {
+      list-style: none;
+    }
+    .docs-sidebar nav ul li { margin: 0; }
+    .docs-sidebar nav ul li a {
+      display: block;
+      padding: 6px var(--spacing-lg);
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      transition: all var(--transition-fast);
+    }
+    .docs-sidebar nav ul li a:hover { color: var(--accent-primary); }
+    .docs-sidebar nav ul li a.active {
+      color: var(--accent-primary);
+      border-left-color: var(--accent-primary);
+      font-weight: var(--font-weight-medium);
+    }
+    .docs-sidebar .section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      padding: var(--spacing-md) var(--spacing-lg) 4px;
+      font-weight: var(--font-weight-bold);
+    }
+    .docs-sidebar .sub a { padding-left: 36px; font-size: 12px; }
+    .docs-sidebar .subsub a { padding-left: 52px; font-size: 12px; }
+
+    .docs-content {
+      flex: 1;
+      padding: 40px 48px 80px;
+      max-width: 860px;
+      min-width: 0;
+    }
+    .docs-content h1 {
+      font-size: 32px;
+      font-weight: var(--font-weight-heading);
+      margin-bottom: var(--spacing-xs);
+    }
+    .docs-content h1 .subtitle {
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-normal);
+      color: var(--text-secondary);
+      display: block;
+      margin-top: 4px;
+    }
+    .docs-content h2 {
+      font-size: 24px;
+      font-weight: var(--font-weight-heading);
+      margin: 40px 0 var(--spacing-md);
+      padding-bottom: var(--spacing-sm);
+      border-bottom: 1px solid var(--border-color);
+    }
+    .docs-content h3 {
+      font-size: 18px;
+      font-weight: var(--font-weight-bold);
+      margin: 28px 0 var(--spacing-sm);
+    }
+    .docs-content h4 {
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-bold);
+      margin: 20px 0 var(--spacing-xs);
+      color: var(--text-primary);
+    }
+    .docs-content p { margin-bottom: var(--spacing-md); line-height: 1.7; }
+    .docs-content ul, .docs-content ol { margin-bottom: var(--spacing-md); padding-left: 24px; }
+    .docs-content li { margin-bottom: 4px; line-height: 1.6; }
+    .docs-content code {
+      background: var(--bg-tertiary);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 13px;
+    }
+    .docs-content pre {
+      background: var(--bg-tertiary);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-sm);
+      overflow-x: auto;
+      margin-bottom: var(--spacing-md);
+    }
+    .docs-content pre code { background: none; padding: 0; }
+
+    .docs-content .callout {
+      padding: var(--spacing-md) var(--spacing-lg);
+      border-left: 4px solid;
+      border-radius: var(--radius-sm);
+      margin-bottom: var(--spacing-md);
+    }
+    .callout.warning { background: rgba(255,193,7,0.1); border-color: var(--accent-warning); }
+    .callout.info { background: rgba(13,110,253,0.05); border-color: var(--accent-primary); }
+    .callout.danger { background: rgba(220,53,69,0.05); border-color: var(--accent-danger); }
+    [data-theme="dark"] .callout.warning { background: rgba(255,193,7,0.05); }
+    [data-theme="dark"] .callout.info { background: rgba(13,110,253,0.08); }
+    [data-theme="dark"] .callout.danger { background: rgba(220,53,69,0.08); }
+    .callout .callout-title { font-weight: var(--font-weight-bold); margin-bottom: 4px; }
+
+    .docs-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: var(--spacing-md);
+    }
+    .docs-content th, .docs-content td {
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      text-align: left;
+      font-size: var(--font-size-sm);
+    }
+    .docs-content th { background: var(--bg-tertiary); font-weight: var(--font-weight-bold); }
+    .docs-content tr:nth-child(even) td { background: var(--bg-tertiary); }
+
+    .docs-footer {
+      text-align: center;
+      padding: 40px 0 20px;
+      color: var(--text-muted);
+      font-size: var(--font-size-sm);
+    }
+
+    .docs-figure {
+      margin: 20px 0;
+      text-align: center;
+    }
+    .docs-figure img {
+      max-width: 100%;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .docs-figure figcaption {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    @media (max-width: 900px) {
+      .docs-sidebar { display: none; }
+      .docs-content { padding: 20px 24px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="docs-topbar">
+  <a href="../" class="logo">🎲 Qwixx Online</a>
+  <span style="font-size:var(--font-size-sm);color:var(--text-secondary);">Manual de usuario</span>
+  <div class="spacer"></div>
+  <a href="../" class="btn-back">⬅ Volver al juego</a>
+  <button id="btn-theme-docs" class="btn-icon" title="Cambiar tema"><span id="theme-icon-docs">🌙</span></button>
+</div>
+
+<div class="docs-wrapper">
+  <aside class="docs-sidebar">
+    <nav>
+      <ul>
+        <li class="section-title">Qwixx Online</li>
+        <li><a href="#intro">1. Introducción</a></li>
+        <li class="sub"><a href="#intro-que-es">1.1 Qué es</a></li>
+        <li class="sub"><a href="#intro-requisitos">1.2 Requisitos</a></li>
+
+        <li class="section-title">Juego</li>
+        <li><a href="#como-jugar">2. Cómo Jugar</a></li>
+        <li class="sub"><a href="#login-lobby">2.1 Login y Sala de Espera</a></li>
+        <li class="sub"><a href="#crear-mesa">2.2 Crear o Unirse a una Mesa</a></li>
+        <li class="sub"><a href="#partida">2.3 Durante la Partida</a></li>
+
+        <li class="section-title">Reglas</li>
+        <li><a href="#reglas">3. Reglas de Qwixx</a></li>
+        <li class="sub"><a href="#reglas-objetivo">3.1 Objetivo</a></li>
+        <li class="sub"><a href="#reglas-filas">3.2 Direccionalidad de Filas</a></li>
+        <li class="sub"><a href="#reglas-accion1">3.3 Acción 1 (Dados Blancos)</a></li>
+        <li class="sub"><a href="#reglas-accion2">3.4 Acción 2 (Base + Color)</a></li>
+        <li class="sub"><a href="#reglas-penalizaciones">3.5 Penalizaciones</a></li>
+        <li class="sub"><a href="#reglas-bloqueo">3.6 Bloqueo de Filas</a></li>
+        <li class="sub"><a href="#reglas-fin">3.7 Fin del Juego</a></li>
+
+        <li class="section-title">Puntuación</li>
+        <li><a href="#puntuacion">4. Sistema de Puntuación</a></li>
+        <li class="sub"><a href="#puntuacion-tabla">4.1 Tabla de Puntuación</a></li>
+        <li class="sub"><a href="#puntuacion-formula">4.2 Cálculo Final</a></li>
+
+        <li class="section-title">Referencia</li>
+        <li><a href="#faq">5. FAQ</a></li>
+        <li><a href="#rng">6. Generación de Números Aleatorios</a></li>
+        <li><a href="#solucion-problemas">7. Solución de Problemas</a></li>
+        <li><a href="#acerca-de">8. Acerca de</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="docs-content">
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- 1. INTRODUCCIÓN -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section id="intro">
+      <h1>Manual de Usuario — Qwixx Online<span class="subtitle">Juego de dados multijugador · <span id="version-subtitle"></span></span></h1>
+
+      <div class="callout info">
+        <div class="callout-title">💡 Bienvenido</div>
+        <p>Qwixx Online es una adaptación digital del popular juego de dados Qwixx. Juega con amigos en tiempo real desde cualquier navegador.</p>
+      </div>
+    </section>
+
+    <section id="intro-que-es">
+      <h3>1.1 Qué es Qwixx</h3>
+      <p>Qwixx es un juego de dados para 2 a 5 jugadores. Cada jugador tiene un cartón con 4 filas de colores (rojo, amarillo, verde, azul). El objetivo es tachar números en las filas para sumar la mayor cantidad de puntos, gestionando el riesgo de bloqueos y evitando penalizaciones.</p>
+      <p><strong>Creado por:</strong> Steffen Benndorf. Publicado originalmente por Nürnberger-Spielkarten-Verlag.</p>
+    </section>
+
+    <section id="intro-requisitos">
+      <h3>1.2 Requisitos del Sistema</h3>
+      <ul>
+        <li>Navegador web moderno (Chrome 90+, Firefox 90+, Safari 15+, Edge 90+)</li>
+        <li>Conexión a internet (para juego multijugador)</li>
+        <li>JavaScript habilitado</li>
+        <li>No requiere instalación ni registro</li>
+      </ul>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- 2. CÓMO JUGAR -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section id="como-jugar">
+      <h2>2. Cómo Jugar</h2>
+      <p>Qwixx Online es una aplicación web de página única (SPA). A continuación se explica el flujo de uso.</p>
+    </section>
+
+    <section id="login-lobby">
+      <h3>2.1 Login y Sala de Espera</h3>
+      <p>Al entrar a la web, se te pedirá un <strong>nombre de usuario único</strong>. El nombre se guarda en tu navegador (localStorage) para futuros ingresos.</p>
+      <p>Una vez dentro, verás la <strong>Sala de Espera</strong> con:</p>
+      <ul>
+        <li><strong>Jugadores Conectados</strong>: Lista de todos los usuarios activos en la web.</li>
+        <li><strong>Mesas de Juego</strong>: Partidas disponibles a las que puedes unirte.</li>
+        <li><strong>Ranking Global</strong>: Puntuaciones acumuladas de todos los jugadores.</li>
+        <li><strong>Chat Global</strong>: Para comunicarte con otros jugadores.</li>
+      </ul>
+      <figure class="docs-figure">
+        <img src="/imgs/cap/cap001.png" alt="Sala de Espera" style="max-width:100%;border:1px solid var(--border-color);border-radius:var(--radius-md);">
+        <figcaption>Sala de Espera con lista de jugadores, mesas disponibles y chat global</figcaption>
+      </figure>
+    </section>
+
+    <section id="crear-mesa">
+      <h3>2.2 Crear o Unirse a una Mesa</h3>
+      <h4>Crear Mesa</h4>
+      <p>Haz clic en <strong>"+ Crear Mesa"</strong>. Dale un nombre a tu mesa y selecciona los jugadores que quieras invitar. Serás el anfitrión de la mesa.</p>
+
+      <h4>Unirse a una Mesa</h4>
+      <p>En la lista de mesas, haz clic en <strong>"Unirse"</strong> en la mesa que desees. La mesa debe tener estado "Esperando" y tener espacio disponible (máximo 5 jugadores).</p>
+
+      <figure class="docs-figure">
+        <img src="/imgs/cap/cap002.png" alt="Crear mesa" style="max-width:100%;border:1px solid var(--border-color);border-radius:var(--radius-md);">
+        <figcaption>Modal de creación de mesa con nombre y contraseña opcional</figcaption>
+      </figure>
+
+      <div class="callout warning">
+        <div class="callout-title">⚠️ Importante</div>
+        <p>Solo el anfitrión puede iniciar la partida. Se necesita al menos 1 jugador.</p>
+      </div>
+    </section>
+
+    <section id="partida">
+      <h3>2.3 Durante la Partida</h3>
+      <p>La vista de juego se divide en:</p>
+      <ul>
+        <li><strong>Cartón propio</strong> (izquierda, grande): Tus 4 filas con sus números. Los números tachados se muestran en color. Los números válidos para tachar brillan con un efecto pulsante.</li>
+        <li><strong>Cartones de otros jugadores</strong> (abajo): Versión esquemática con barras de progreso.</li>
+        <li><strong>Área de dados</strong> (derecha, arriba): Muestra los 6 dados (2 blancos, 4 de color). El jugador activo ve el botón <strong>"🎲 Tirar Dados"</strong>.</li>
+        <li><strong>Tabla de puntuaciones</strong>: Puntos en tiempo real de cada jugador.</li>
+        <li><strong>Chat de partida</strong>: Comunicación durante el juego.</li>
+      </ul>
+
+      <h4>Flujo de un Turno</h4>
+      <ol>
+        <li>El jugador activo hace clic en "Tirar Dados".</li>
+        <li>El servidor genera los valores usando <strong>CryptoPureSource</strong> (criptográfico) y los distribuye a todos.</li>
+        <li><strong>Acción 1</strong>: Todos los jugadores pueden tachar la suma de los dados blancos en una fila (o pasar). Los números válidos se resaltan.</li>
+        <li><strong>Acción 2</strong>: Solo el jugador activo puede tachar la suma de un dado base + un dado de color (o pasar).</li>
+        <li>Si el activo no tachó nada en Acción 1 ni Acción 2, recibe una penalización.</li>
+        <li>El turno pasa al siguiente jugador.</li>
+      </ol>
+
+      <figure class="docs-figure">
+        <img src="/imgs/cap/cap003.png" alt="Vista de juego" style="max-width:100%;border:1px solid var(--border-color);border-radius:var(--radius-md);">
+        <figcaption>Vista de juego completa: cartón propio, área de dados, puntuaciones y chat de partida</figcaption>
+      </figure>
+
+      <div class="callout info">
+        <div class="callout-title">⏱ Tiempo por turno</div>
+        <p>Cada jugador tiene <strong>60 segundos</strong> para tomar cada decisión. Si se agota el tiempo, se considera que pasa (no tacha nada).</p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- 3. REGLAS -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section id="reglas">
+      <h2>3. Reglas de Qwixx</h2>
+      <p>Las siguientes reglas están implementadas en el motor del juego y se validan siempre del lado del servidor.</p>
+    </section>
+
+    <section id="reglas-objetivo">
+      <h3>3.1 Objetivo</h3>
+      <p>Maximizar la puntuación tachando números en 4 filas de colores, gestionando el riesgo de bloquear filas y evitando penalizaciones.</p>
+    </section>
+
+    <section id="reglas-filas">
+      <h3>3.2 Direccionalidad de Filas</h3>
+      <p>Cada fila solo puede tacharse en orden secuencial, sin saltos:</p>
+      <ul>
+        <li><strong>Roja</strong>: 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12</li>
+        <li><strong>Amarilla</strong>: 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12</li>
+        <li><strong>Verde</strong>: 12 → 11 → 10 → 9 → 8 → 7 → 6 → 5 → 4 → 3 → 2</li>
+        <li><strong>Azul</strong>: 12 → 11 → 10 → 9 → 8 → 7 → 6 → 5 → 4 → 3 → 2</li>
+      </ul>
+
+      <div class="callout danger">
+        <div class="callout-title">🔴 Importante</div>
+        <p>Si NO tachas un número intermedio, ese número (y todos los anteriores omitidos) quedan <strong>permanentemente bloqueados</strong> para ti en esa fila. No podrás volver atrás.</p>
+      </div>
+    </section>
+
+    <section id="reglas-accion1">
+      <h3>3.3 Acción 1 — Suma de Dados Blancos</h3>
+      <p>Después de la tirada, <strong>todos los jugadores</strong> (incluido el activo) pueden tachar la suma de los dos dados blancos.</p>
+      <ul>
+        <li>La suma está en rango 2 a 12.</li>
+        <li>Cada jugador elige <strong>una</strong> fila (o ninguna).</li>
+        <li>Solo se puede tachar si el número es el <strong>siguiente válido</strong> en esa fila.</li>
+        <li>Los jugadores <strong>no</strong> reciben penalización si deciden no tachar nada.</li>
+      </ul>
+      <figure class="docs-figure">
+        <img src="/imgs/cap/cap004.png" alt="Acción 1" style="max-width:100%;border:1px solid var(--border-color);border-radius:var(--radius-md);">
+        <figcaption>Acción 1: los números válidos para tachar brillan con efecto pulsante</figcaption>
+      </figure>
+    </section>
+
+    <section id="reglas-accion2">
+      <h3>3.4 Acción 2 — Suma Base + Color</h3>
+      <p><strong>Solo el jugador activo</strong> puede realizar esta acción después de la Acción 1.</p>
+      <ul>
+        <li>Elige un dado blanco (base) y un dado de color.</li>
+        <li>La suma se tacha en la fila del color elegido.</li>
+        <li>Ejemplo: blanco=4, rojo=3 → puede tachar 7 en la fila roja.</li>
+      </ul>
+      <figure class="docs-figure">
+        <img src="/imgs/cap/cap005.png" alt="Acción 2" style="max-width:100%;border:1px solid var(--border-color);border-radius:var(--radius-md);">
+        <figcaption>Acción 2: botones de combinación dado base + dado de color para el jugador activo</figcaption>
+      </figure>
+    </section>
+
+    <section id="reglas-penalizaciones">
+      <h3>3.5 Penalizaciones</h3>
+      <p>Si el jugador activo <strong>no tachó ningún número</strong> en la Acción 1 <strong>y</strong> <strong>no tachó ningún número</strong> en la Acción 2, debe marcar una casilla de penalización.</p>
+      <ul>
+        <li>Máximo 4 penalizaciones por jugador.</li>
+        <li>Cada penalización resta 5 puntos al final.</li>
+        <li>Al alcanzar 4 penalizaciones, el juego termina inmediatamente.</li>
+      </ul>
+    </section>
+
+    <section id="reglas-bloqueo">
+      <h3>3.6 Bloqueo de Filas</h3>
+      <p>Cuando un jugador acumula <strong>5 o más tachones</strong> en una fila y en su turno consigue marcar el <strong>último número</strong> de esa fila, la fila se bloquea y el candado se cierra. Esto puede ocurrir tanto en la <strong>Acción 1</strong> (cualquier jugador, si la suma de los dados blancos da el último número) como en la <strong>Acción 2</strong> (solo el jugador activo elige una combinación base + color que sume ese valor).</p>
+
+      <p>Los números que disparan el bloqueo son:</p>
+      <ul>
+        <li><strong>Fila Roja</strong> → tachar el <strong>12</strong> con ≥5 marcas</li>
+        <li><strong>Fila Amarilla</strong> → tachar el <strong>12</strong> con ≥5 marcas</li>
+        <li><strong>Fila Verde</strong> → tachar el <strong>2</strong> con ≥5 marcas</li>
+        <li><strong>Fila Azul</strong> → tachar el <strong>2</strong> con ≥5 marcas</li>
+      </ul>
+
+      <p>Al bloquearse una fila:</p>
+      <ul>
+        <li>El candado abierto pasa a <strong>candado cerrado</strong> en el cartón del jugador que lo bloqueó.</li>
+        <li>La fila queda <strong>bloqueada para todos</strong> los jugadores (nadie puede tachar más en ella).</li>
+        <li>El dado de ese color se retira del juego (ya no se tira en turnos futuros).</li>
+        <li>Si se bloquean <strong>2 filas</strong> en total, el juego termina inmediatamente.</li>
+      </ul>
+
+      <div class="callout info">
+        <div class="callout-title">🔄 Bloqueo Simultáneo</div>
+        <p>Si durante la Acción 1 varios jugadores pueden bloquear la misma fila (tienen ≥5 tachados y la suma blanca da el último número), <strong>todos pueden hacerlo</strong> en ese mismo turno, y la fila se bloquea una sola vez.</p>
+      </div>
+
+      <div class="callout warning">
+        <div class="callout-title">🎯 Estrategia</div>
+        <p>Bloquear una fila puede beneficiar o perjudicar según el momento. Si vas ganando, bloquear una fila acorta la partida y evita que los rivales sigan puntuando en esa fila. Si vas perdiendo, intenta evitar bloqueos hasta haber maximizado tus puntos.</p>
+      </div>
+      <figure class="docs-figure">
+        <img src="/imgs/cap/cap006.png" alt="Fila bloqueada" style="max-width:100%;border:1px solid var(--border-color);border-radius:var(--radius-md);">
+        <figcaption>Fila bloqueada: candado cerrado en el cartón y dado de ese color atenuado</figcaption>
+      </figure>
+    </section>
+
+    <section id="reglas-fin">
+      <h3>3.7 Fin del Juego</h3>
+      <p>El juego termina <strong>inmediatamente</strong> si ocurre cualquiera de estas condiciones:</p>
+      <ol>
+        <li>Un jugador alcanza <strong>4 penalizaciones</strong>.</li>
+        <li>Se han bloqueado <strong>2 filas</strong> de color.</li>
+      </ol>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- 4. PUNTUACIÓN -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section id="puntuacion">
+      <h2>4. Sistema de Puntuación</h2>
+      <p>Al finalizar la partida, se calcula la puntuación usando números triangulares.</p>
+    </section>
+
+    <section id="puntuacion-tabla">
+      <h3>4.1 Tabla de Puntuación</h3>
+      <table>
+        <thead>
+          <tr><th>Números tachados (n)</th><th>Puntos por fila</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>1</td></tr>
+          <tr><td>2</td><td>3</td></tr>
+          <tr><td>3</td><td>6</td></tr>
+          <tr><td>4</td><td>10</td></tr>
+          <tr><td>5</td><td>15</td></tr>
+          <tr><td>6</td><td>21</td></tr>
+          <tr><td>7</td><td>28</td></tr>
+          <tr><td>8</td><td>36</td></tr>
+          <tr><td>9</td><td>45</td></tr>
+          <tr><td>10</td><td>55</td></tr>
+          <tr><td>11</td><td>66</td></tr>
+          <tr><td>12</td><td>78</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="puntuacion-formula">
+      <h3>4.2 Cálculo Final</h3>
+      <p><strong>Fórmula:</strong> <code>PuntosFila = n × (n + 1) / 2</code> (n = números tachados en la fila)</p>
+      <p><strong>Puntuación Total</strong> = Suma(Puntos de las 4 filas) − (Penalizaciones × 5)</p>
+      <p>Gana el jugador con mayor Puntuación Total. En caso de empate, se declara empate.</p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- 5. FAQ -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section id="faq">
+      <h2>5. FAQ — Preguntas Frecuentes</h2>
+
+      <h4>¿Puedo jugar desde el móvil?</h4>
+      <p>Sí. La interfaz es responsive y se adapta a pantallas pequeñas. En móvil, los cartones se muestran en vertical y el área de dados se reordena.</p>
+
+      <h4>¿Qué pasa si pierdo la conexión?</h4>
+      <p>Si te desconectas durante una partida, tu estado se mantiene. El servidor espera 60 segundos por turno. Si no respondes, se considera que pasas. Si todos se desconectan, la partida finaliza.</p>
+
+      <h4>¿Cómo se guarda mi nombre?</h4>
+      <p>Tu nombre se guarda en el <strong>localStorage</strong> de tu navegador. No necesitas crear una cuenta ni recordar contraseñas.</p>
+
+      <h4>¿Los dados son realmente aleatorios?</h4>
+      <p>Sí. El servidor usa <strong>crypto.randomBytes()</strong> de Node.js, una fuente criptográficamente segura de aleatoriedad. Cada tirada es independiente y no predecible. Consulta la sección de RNG para más detalles.</p>
+
+      <h4>¿Puedo ver las partidas de otros?</h4>
+      <p>Actualmente no hay modo espectador. Solo los jugadores en la mesa ven la partida.</p>
+
+      <h4>¿Cómo funciona el ranking?</h4>
+      <p>El ranking global acumula los puntos de todas tus partidas. Cada vez que terminas una partida, tus puntos se suman a tu total histórico. Gana el que más puntos acumule.</p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- 6. RNG -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section id="rng">
+      <h2>6. Generación de Números Aleatorios</h2>
+      <p>Qwixx Online utiliza un sistema de aleatoriedad basado en <strong>CryptoPureSource</strong>, adaptado del documento de referencia <code>RNG_REFERENCE.md</code>.</p>
+
+      <h4>Implementación</h4>
+      <p>El servidor usa <code>crypto.randomBytes(4)</code> de Node.js para obtener 4 bytes de entropía del sistema operativo, y los convierte en un entero de 32 bits para cada dado.</p>
+
+      <pre><code>class CryptoPureSource {
+  nextInt(min, max) {
+    const range = max - min + 1;
+    const bytes = crypto.randomBytes(4);
+    const value = bytes.readUInt32BE(0);
+    return min + (value % range);
+  }
+
+  rollDice(activeColors) {
+    return {
+      white: [this.nextInt(1,6), this.nextInt(1,6)],
+      red: activeColors.includes('red') ? this.nextInt(1,6) : null,
+      green: activeColors.includes('green') ? this.nextInt(1,6) : null,
+      blue: activeColors.includes('blue') ? this.nextInt(1,6) : null,
+      yellow: activeColors.includes('yellow') ? this.nextInt(1,6) : null
+    };
+  }
+}</code></pre>
+
+      <h4>Flujo de generación</h4>
+      <ol>
+        <li>El jugador activo hace clic en "Tirar Dados".</li>
+        <li>El cliente envía una solicitud al servidor via WebSocket.</li>
+        <li>El servidor ejecuta <code>CryptoPureSource.rollDice()</code>.</li>
+        <li>El resultado se transmite a todos los jugadores de la sala.</li>
+      </ol>
+
+      <div class="callout info">
+        <div class="callout-title">🔒 Seguridad</div>
+        <p>El servidor es la única fuente de verdad para la aleatoriedad. Esto previene cualquier manipulación por parte de los clientes y garantiza公平 para todos los jugadores.</p>
+      </div>
+
+      <p>Para más detalles técnicos, consulta el archivo <code>RNG_REFERENCE.md</code> del proyecto.</p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- 7. SOLUCIÓN DE PROBLEMAS -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section id="solucion-problemas">
+      <h2>7. Solución de Problemas</h2>
+
+      <h4>No puedo conectarme al servidor</h4>
+      <p>Verifica que el servidor esté ejecutándose (<code>npm start</code> o <code>node server.js</code>). Comprueba que el puerto 3000 no esté bloqueado por un firewall.</p>
+
+      <h4>El nombre de usuario no se acepta</h4>
+      <ul>
+        <li>Debe tener al menos 2 caracteres.</li>
+        <li>Máximo 20 caracteres.</li>
+        <li>Solo letras, números, espacios, guiones y guiones bajos.</li>
+        <li>Debe ser único (no puede haber otro jugador conectado con el mismo nombre).</li>
+      </ul>
+
+      <h4>El juego no avanza / los botones no responden</h4>
+      <ul>
+        <li>Verifica que sea tu turno (el indicador 🎯 aparece junto a tu nombre).</li>
+        <li>Comprueba que el timer de 60s no haya expirado.</li>
+        <li>Si el problema persiste, recarga la página y vuelve a unirte a la mesa.</li>
+      </ul>
+
+      <h4>La animación de los dados no se ve</h4>
+      <p>Las animaciones CSS requieren un navegador moderno. Si no ves la animación 3D, la funcionalidad del juego no se ve afectada — los números son correctos aunque no se vea la rotación.</p>
+
+      <h4>No se escucha el sonido de los dados</h4>
+      <p>El sonido usa la Web Audio API. Algunos navegadores requieren una interacción del usuario (clic) antes de poder reproducir audio. Haz clic en cualquier parte de la página para activar el audio.</p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- 8. ACERCA DE -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <section id="acerca-de">
+      <h2>8. Acerca de</h2>
+
+      <h4>Qwixx Online <span id="version-about"></span></h4>
+      <p>Qwixx Online es una adaptación digital no oficial del juego de dados <strong>Qwixx</strong>, creado por <strong>Steffen Benndorf</strong> y publicado originalmente por <strong>Nürnberger-Spielkarten-Verlag (NSV)</strong>.</p>
+      <p>Visita el sitio oficial de NSV: <a href="https://www.nsv.de" target="_blank" rel="noopener">https://www.nsv.de</a></p>
+
+      <h4>Desarrollador</h4>
+      <p>Esta aplicación ha sido desarrollada por <strong>carlymx</strong>.</p>
+      <p>GitHub: <a href="https://github.com/carlymx" target="_blank" rel="noopener">https://github.com/carlymx</a></p>
+      <p>Repositorio del proyecto: <a href="https://github.com/carlymx/qwixx-online" target="_blank" rel="noopener">https://github.com/carlymx/qwixx-online</a></p>
+
+      <h4>Propiedad intelectual</h4>
+      <p>El juego original <strong>Qwixx</strong> y su marca son propiedad de <strong>Steffen Benndorf</strong> y <strong>Nürnberger-Spielkarten-Verlag</strong>. Esta implementación digital no está afiliada ni respaldada por los titulares originales.</p>
+      <p>Los diseños gráficos originales (SVG, iconos, interfaz de usuario) creados por <strong>carlymx</strong> para este proyecto son propiedad de su autor y todos los derechos están reservados.</p>
+      <p>El código fuente de esta aplicación se distribuye bajo los términos de la <strong>GNU General Public License v3.0</strong>.</p>
+      <p><a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener">https://www.gnu.org/licenses/gpl-3.0.html</a></p>
+
+      <h4>Aviso legal</h4>
+      <p>ESTE SOFTWARE SE PROPORCIONA "TAL CUAL", SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O IMPLÍCITA, INCLUYENDO PERO NO LIMITADO A GARANTÍAS DE COMERCIALIZACIÓN, IDONEIDAD PARA UN PROPÓSITO PARTICULAR Y NO INFRACCIÓN. EN NINGÚN CASO LOS AUTORES O TITULARES DEL COPYRIGHT SERÁN RESPONSABLES POR CUALQUIER RECLAMO, DAÑO U OTRA RESPONSABILIDAD, YA SEA EN UNA ACCIÓN CONTRACTUAL, EXTRACONTRACTUAL O DE OTRO TIPO, QUE SURJA DE O EN CONEXIÓN CON EL SOFTWARE O EL USO U OTRO TIPO DE ACCIONES EN EL SOFTWARE.</p>
+      <p>Qwixx Online es un proyecto sin ánimo de lucro, creado con fines educativos y de entretenimiento. No se cobra por su uso ni se recaudan datos personales de los usuarios.</p>
+    </section>
+
+    <footer class="docs-footer">
+      Qwixx Online <span id="version-footer"></span> — 2026-06-20<br>
+      Basado en el juego original Qwixx de Steffen Benndorf<br>
+      Hecho por <a href="https://github.com/carlymx" target="_blank" rel="noopener">carlymx</a> · <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener">GPLv3</a>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  document.getElementById('version-subtitle').textContent = VERSION;
+  document.getElementById('version-footer').textContent = VERSION;
+  document.getElementById('version-about').textContent = VERSION;
+  document.getElementById('btn-theme-docs')?.addEventListener('click', function() {
+    const html = document.documentElement;
+    const theme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', theme);
+    document.getElementById('theme-icon-docs').textContent = theme === 'dark' ? '☀️' : '🌙';
+    try { localStorage.setItem('qwixx_theme', theme); } catch {}
+  });
+
+  const saved = (function() { try { return localStorage.getItem('qwixx_theme'); } catch { return null; } })();
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('theme-icon-docs').textContent = saved === 'dark' ? '☀️' : '🌙';
+  }
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        document.querySelectorAll('.docs-sidebar a').forEach(a => a.classList.remove('active'));
+        const link = document.querySelector(`.docs-sidebar a[href="#${entry.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-80px 0px -60% 0px' });
+
+  document.querySelectorAll('section[id]').forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

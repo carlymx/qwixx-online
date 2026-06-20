@@ -1,0 +1,13 @@
+node_modules/
+.env
+data/ranking.json
+*.log
+.DS_Store
+Thumbs.db
+
+
+PLAN.md
+DESIGN.md
+RNG_REFERENCE.md
+DOCS_ARCHITECTURE.md
+AUTORIA.md
