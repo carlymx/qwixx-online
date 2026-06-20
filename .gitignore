@@ -4,4 +4,9 @@ data/ranking.json
 *.log
 .DS_Store
 Thumbs.db
+
+PLAN.md
 DESIGN.md
+AUTORIA.md
+DOCS_ARCHITECTURE.md
+RNG_REFERENCE.md
