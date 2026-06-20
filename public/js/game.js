@@ -108,7 +108,8 @@ const GameUI = {
 
         if (canSelect) {
           panelEl.classList.add('panel-selectable');
-          panelEl.addEventListener('click', () => {
+          numEl.classList.add('panel-selectable');
+          const clickHandler = () => {
             Audio.playMark();
             App.socket.emit('action_1_choice', { color });
             GameUI.actionPending = false;
@@ -118,7 +119,15 @@ const GameUI = {
               p.filas[color].count = p.filas[color].marked.filter(Boolean).length;
             }
             GameUI.renderMyBoard(GameUI.players.find(p => p.id === GameUI.myPlayerId));
-          });
+            const activeP = GameUI.players.find(p => p.isActive);
+            if (activeP && activeP.id !== GameUI.myPlayerId) {
+              GameUI.updateStatus(`⏳ Esperando a ${activeP.username} en la Acción 1...`);
+            } else {
+              GameUI.updateStatus('⏳ Esperando a los demás jugadores en la Acción 1...');
+            }
+          };
+          panelEl.addEventListener('click', clickHandler);
+          numEl.addEventListener('click', clickHandler);
         }
       }
     }
@@ -183,6 +192,12 @@ const GameUI = {
           App.socket.emit('action_1_choice', { color: null });
           GameUI.actionPending = false;
           GameUI.renderAll();
+          const activeP = GameUI.players.find(p => p.isActive);
+          if (activeP && activeP.id !== GameUI.myPlayerId) {
+            GameUI.updateStatus(`⏳ Esperando a ${activeP.username} en la Acción 1...`);
+          } else {
+            GameUI.updateStatus('⏳ Esperando a los demás jugadores en la Acción 1...');
+          }
         });
       }, 0);
     }
