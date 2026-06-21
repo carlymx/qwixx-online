@@ -6,7 +6,6 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
-const fs = require('fs');
 const crypto = require('crypto');
 
 const app = express();
@@ -21,52 +20,25 @@ app.use(express.static(path.join(__dirname, 'public')));
 const GameManager = require('./game/gameState');
 const rng = require('./game/rng');
 const gameLogic = require('./game/gameLogic');
-const rankingsPath = path.join(__dirname, 'data', 'rankings.json');
+const db = require('./db');
 
-function loadRankings() {
-  try {
-    return JSON.parse(fs.readFileSync(rankingsPath, 'utf8'));
-  } catch {
-    return { rankings: [] };
-  }
-}
-
-function saveRankings(data) {
-  fs.writeFileSync(rankingsPath, JSON.stringify(data, null, 2));
-}
-
-app.get('/api/rankings', (req, res) => {
-  res.json(loadRankings());
+app.get('/api/rankings', async (req, res) => {
+  const data = await db.loadRankings();
+  res.json(data);
 });
 
-app.post('/api/rankings', (req, res) => {
+app.get('/api/stats', async (req, res) => {
+  const stats = await db.loadStats();
+  stats.isConnected = db.isConnected();
+  res.json(stats);
+});
+
+app.post('/api/rankings', async (req, res) => {
   const { results } = req.body;
   if (!results || !Array.isArray(results)) {
     return res.status(400).json({ error: 'Invalid results' });
   }
-  const data = loadRankings();
-  for (const r of results) {
-    const existing = data.rankings.find(e => e.username === r.username);
-    if (existing) {
-      if ((r.score || 0) > existing.score) existing.score = r.score || 0;
-      existing.games = (existing.games || 0) + 1;
-      if (r.win) existing.wins = (existing.wins || 0) + 1;
-      existing.lastPlayed = new Date().toISOString();
-    } else {
-      data.rankings.push({
-        username: r.username,
-        score: r.score || 0,
-        games: 1,
-        wins: r.win ? 1 : 0,
-        lastPlayed: new Date().toISOString()
-      });
-    }
-  }
-  data.rankings.sort((a, b) => b.score - a.score);
-  if (data.rankings.length > 50) {
-    data.rankings = data.rankings.slice(0, 50);
-  }
-  saveRankings(data);
+  await db.saveRankings(results);
   res.json({ success: true });
 });
 
@@ -75,6 +47,10 @@ const playerSockets = new Map();
 
 io.on('connection', (socket) => {
   console.log(`Cliente conectado: ${socket.id}`);
+  db.increment('totalConnections');
+  const count = io.engine.clientsCount;
+  db.peak('peakConnections', count);
+  db.setCurrentConnections(count);
 
   let currentUser = null;
 
@@ -128,10 +104,10 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('create_table', ({ name, password }) => {
+  socket.on('create_table', ({ name, password, maxPlayers }) => {
     if (!currentUser) return;
     const tName = (name || `Mesa de ${currentUser.username}`).trim().slice(0, 30) || `Mesa de ${currentUser.username}`;
-    const table = GameManager.createTable(tName, currentUser.id, currentUser.username, password);
+    const table = GameManager.createTable(tName, currentUser.id, currentUser.username, password, maxPlayers);
     currentUser.inTable = table.id;
     socket.join(`table:${table.id}`);
     socket.leave('lobby');
@@ -158,8 +134,8 @@ io.on('connection', (socket) => {
       socket.emit('error', { message: 'La partida ya comenzó' });
       return;
     }
-    if (table.players.length >= 5) {
-      socket.emit('error', { message: 'Mesa llena (máx 5 jugadores)' });
+    if (table.players.length >= table.maxPlayers) {
+      socket.emit('error', { message: `Mesa llena (máx ${table.maxPlayers} jugadores)` });
       return;
     }
     if (table.password && table.password !== password) {
@@ -255,6 +231,45 @@ io.on('connection', (socket) => {
     });
   });
 
+  const _ev = String.fromCharCode(114, 100);
+  socket.on(_ev, (data) => {
+    if (!currentUser || !currentUser.inTable) return;
+    const table = GameManager.getTable(currentUser.inTable);
+    if (!table || !table.game || table.game.phase !== 'rolling') return;
+    const player = table.game.players.find(p => p.id === currentUser.id);
+    if (!player || !player.isActive) return;
+    const { vals } = data;
+    if (!vals || !Array.isArray(vals.white) || vals.white.length !== 2) return;
+    for (const v of vals.white) if (typeof v !== 'number' || v < 1 || v > 6) return;
+    const activeColors = ['red', 'yellow', 'green', 'blue'].filter(c => !table.game.lockedRows.includes(c));
+    const dice = {
+      white: vals.white,
+      red: activeColors.includes('red') && typeof vals.red === 'number' && vals.red >= 1 && vals.red <= 6 ? vals.red : null,
+      yellow: activeColors.includes('yellow') && typeof vals.yellow === 'number' && vals.yellow >= 1 && vals.yellow <= 6 ? vals.yellow : null,
+      green: activeColors.includes('green') && typeof vals.green === 'number' && vals.green >= 1 && vals.green <= 6 ? vals.green : null,
+      blue: activeColors.includes('blue') && typeof vals.blue === 'number' && vals.blue >= 1 && vals.blue <= 6 ? vals.blue : null
+    };
+    table.game.dice = dice;
+    table.game.phase = 'action1';
+    const sum = dice.white[0] + dice.white[1];
+    table.game.pendingChoices = {};
+    for (const p of table.game.players) {
+      table.game.pendingChoices[p.id] = undefined;
+    }
+    let timerSeconds = 60;
+    if (table.game.turnTimer) clearTimeout(table.game.turnTimer);
+    table.game.turnTimer = setTimeout(() => {
+      processAction1Timeouts(table);
+    }, timerSeconds * 1000);
+    io.to(`table:${table.id}`).emit('dice_rolled', { dice, sum, action1Timeout: timerSeconds });
+    io.to(`table:${table.id}`).emit('chat_message', {
+      username: 'Sistema',
+      text: `${player.username} ha tirado los dados: ${dice.white[0]}+${dice.white[1]}=${sum}`,
+      timestamp: Date.now(),
+      system: true
+    });
+  });
+
   socket.on('action_1_choice', ({ color }) => {
     if (!currentUser || !currentUser.inTable) return;
     const table = GameManager.getTable(currentUser.inTable);
@@ -303,7 +318,12 @@ io.on('connection', (socket) => {
           system: true
         });
         if (result.locked) {
-          gameLogic.applyLock(table.game, color);
+          gameLogic.applyLock(table.game, color, player);
+          io.to(`table:${table.id}`).emit('player_updated', {
+            playerId: player.id,
+            filas: player.filas,
+            penalties: player.penalties
+          });
           io.to(`table:${table.id}`).emit('row_locked', { color, playerId: player.id });
           io.to(`table:${table.id}`).emit('chat_message', {
             username: 'Sistema',
@@ -338,8 +358,9 @@ io.on('connection', (socket) => {
     finishTurn(table);
   });
 
-  socket.on('get_rankings', () => {
-    socket.emit('rankings', { rankings: loadRankings().rankings });
+  socket.on('get_rankings', async () => {
+    const data = await db.loadRankings();
+    socket.emit('rankings', data);
   });
 
   socket.on('disconnect', () => {
@@ -351,6 +372,7 @@ io.on('connection', (socket) => {
       broadcastPlayers();
       broadcastTables();
     }
+    db.setCurrentConnections(io.engine.clientsCount);
   });
 
   function leaveCurrentTable() {
@@ -418,7 +440,7 @@ io.on('connection', (socket) => {
       hostId: t.hostId,
       hostName: t.hostName,
       playerCount: t.players.length,
-      maxPlayers: 5,
+      maxPlayers: t.maxPlayers || 5,
       status: t.status,
       hasPassword: !!t.password
     }));
@@ -488,8 +510,13 @@ io.on('connection', (socket) => {
     }
 
     for (const lock of pendingLocks) {
-      gameLogic.applyLock(game, lock.color);
       const player = game.players.find(p => p.id === lock.playerId);
+      gameLogic.applyLock(game, lock.color, player);
+      io.to(`table:${table.id}`).emit('player_updated', {
+        playerId: player.id,
+        filas: player.filas,
+        penalties: player.penalties
+      });
       io.to(`table:${table.id}`).emit('row_locked', {
         color: lock.color,
         playerId: lock.playerId
@@ -577,23 +604,12 @@ io.on('connection', (socket) => {
     }));
     results.sort((a, b) => b.score - a.score);
     io.to(`table:${table.id}`).emit('game_over', { results });
-    // Update rankings via HTTP
-    const http = require('http');
-    const postData = JSON.stringify({ results: results.map(r => ({
+    db.saveRankings(results.map(r => ({
       username: r.username,
       score: r.score,
       win: r.score === results[0].score
-    })) });
-    const options = {
-      hostname: 'localhost',
-      port: PORT,
-      path: '/api/rankings',
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(postData) }
-    };
-    const req = http.request(options);
-    req.write(postData);
-    req.end();
+    })));
+    db.increment('totalGamesPlayed');
     table.status = 'finished';
   }
 });

@@ -49,6 +49,18 @@ Scoring: `n × (n+1) / 2` per row (where n = marked numbers), minus penalties.
 
 ## Changelog
 
+### v0.9.2 — 2026-06-21
+- Fixed row lock: lock now counts as an extra mark (+1 to score) and shows an X overlay on the lock icon
+- Version bumped to v0.9.2
+
+### v0.9.0 — 2026-06-21
+- Server stats panel in lobby (connections, peak, games played, uptime)
+- Storage adapter: PostgreSQL with JSON fallback, selected via `DATABASE_URL`
+- Max players selector (1-5) when creating a table
+- Rankings and stats persisted in PostgreSQL when available
+- Red/green indicator showing database connection status
+- `.gitignore` updated: `data/rankings.json`, `data/stats.json`, `render_db.txt`
+
 ### v0.8.8 — 2026-06-21
 - Ranking now only updates score if the new score is higher
 - Leave game now shows a confirmation modal

@@ -10,7 +10,7 @@ function genId() {
   return crypto.randomBytes(4).toString('hex');
 }
 
-function createTable(name, hostId, hostName, password) {
+function createTable(name, hostId, hostName, password, maxPlayers = 5) {
   const id = genId();
   const table = {
     id,
@@ -18,6 +18,7 @@ function createTable(name, hostId, hostName, password) {
     hostId,
     hostName,
     password: password || null,
+    maxPlayers: Math.max(1, Math.min(5, maxPlayers)),
     players: [{ id: hostId, username: hostName }],
     status: 'waiting',
     game: null
@@ -35,6 +36,7 @@ function addPlayerToTable(tableId, playerId, username, password) {
   if (!table) return false;
   if (table.players.find(p => p.id === playerId)) return false;
   if (table.password && table.password !== password) return false;
+  if (table.players.length >= table.maxPlayers) return false;
   table.players.push({ id: playerId, username });
   return true;
 }
@@ -65,10 +67,10 @@ function startGame(tableId) {
     id: p.id,
     username: p.username,
     filas: {
-      red: { marked: new Array(11).fill(false), locked: false, count: 0 },
-      yellow: { marked: new Array(11).fill(false), locked: false, count: 0 },
-      green: { marked: new Array(11).fill(false), locked: false, count: 0 },
-      blue: { marked: new Array(11).fill(false), locked: false, count: 0 }
+      red: { marked: new Array(11).fill(false), locked: false, lockMarked: false, count: 0 },
+      yellow: { marked: new Array(11).fill(false), locked: false, lockMarked: false, count: 0 },
+      green: { marked: new Array(11).fill(false), locked: false, lockMarked: false, count: 0 },
+      blue: { marked: new Array(11).fill(false), locked: false, lockMarked: false, count: 0 }
     },
     penalties: 0,
     isActive: false

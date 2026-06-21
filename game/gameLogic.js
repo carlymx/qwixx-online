@@ -77,11 +77,15 @@ function applyMark(player, color, number) {
   }
 }
 
-function applyLock(game, color) {
+function applyLock(game, color, player) {
   if (!game.lockedRows.includes(color)) {
     game.lockedRows.push(color);
     for (const p of game.players) {
       p.filas[color].locked = true;
+    }
+    if (player && player.filas[color]) {
+      player.filas[color].lockMarked = true;
+      player.filas[color].count++;
     }
   }
 }

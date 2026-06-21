@@ -354,6 +354,45 @@ body {
 [data-theme="dark"] .status-badge.waiting { background: #0f5132; color: #d1e7dd; }
 [data-theme="dark"] .status-badge.playing { background: #055160; color: #cff4fc; }
 
+/* Server Stats */
+.stats-content {
+  font-size: var(--font-size-sm);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 6px;
+  line-height: 1.5;
+}
+.stats-db-indicator {
+  font-size: 14px;
+  line-height: 1;
+}
+.stats-db-label {
+  font-weight: var(--font-weight-bold);
+  color: var(--accent-primary);
+}
+.stats-version {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.stats-sep {
+  color: var(--text-muted);
+  opacity: 0.4;
+}
+.stats-label {
+  color: var(--text-secondary);
+}
+.stats-value {
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+.stats-muted {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
 /* Rankings */
 .rankings-list {
   list-style: none;

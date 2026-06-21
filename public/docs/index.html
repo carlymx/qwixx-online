@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Qwixx Online — Manual de Usuario</title>
   <link rel="stylesheet" href="../css/styles.css">
-  <script>const VERSION = 'v0.8.8';</script>
+  <script>const VERSION = 'v0.9.2';</script>
   <style>
     :root {
       --docs-sidebar-width: 260px;
@@ -276,7 +276,7 @@
 
     <section id="intro-que-es">
       <h3>1.1 Qué es Qwixx</h3>
-      <p>Qwixx es un juego de dados para 2 a 5 jugadores. Cada jugador tiene un cartón con 4 filas de colores (rojo, amarillo, verde, azul). El objetivo es tachar números en las filas para sumar la mayor cantidad de puntos, gestionando el riesgo de bloqueos y evitando penalizaciones.</p>
+      <p>Qwixx es un juego de dados de 1 a 5 jugadores. Cada jugador tiene un cartón con 4 filas de colores (rojo, amarillo, verde, azul). El objetivo es tachar números en las filas para sumar la mayor cantidad de puntos, gestionando el riesgo de bloqueos y evitando penalizaciones.</p>
       <p><strong>Creado por:</strong> Steffen Benndorf. Publicado originalmente por Nürnberger-Spielkarten-Verlag.</p>
     </section>
 
@@ -303,6 +303,7 @@
       <p>Al entrar a la web, se te pedirá un <strong>nombre de usuario único</strong>. El nombre se guarda en tu navegador (localStorage) para futuros ingresos.</p>
       <p>Una vez dentro, verás la <strong>Sala de Espera</strong> con:</p>
       <ul>
+        <li><strong>Servidor</strong>: Barra con indicador 🔴/🟢 del estado de la base de datos, conexiones activas, total de partidas jugadas y tiempo desde el último reinicio.</li>
         <li><strong>Jugadores Conectados</strong>: Lista de todos los usuarios activos en la web.</li>
         <li><strong>Mesas de Juego</strong>: Partidas disponibles a las que puedes unirte.</li>
         <li><strong>Ranking Global</strong>: Puntuaciones acumuladas de todos los jugadores.</li>
@@ -317,14 +318,14 @@
     <section id="crear-mesa">
       <h3>2.2 Crear o Unirse a una Mesa</h3>
       <h4>Crear Mesa</h4>
-      <p>Haz clic en <strong>"+ Crear Mesa"</strong>. Dale un nombre a tu mesa y selecciona los jugadores que quieras invitar. Serás el anfitrión de la mesa.</p>
+      <p>Haz clic en <strong>"+ Crear Mesa"</strong>. Dale un nombre a tu mesa, elige el máximo de jugadores (de 1 a 5, por defecto 5) y opcionalmente una contraseña. Serás el anfitrión de la mesa.</p>
 
       <h4>Unirse a una Mesa</h4>
-      <p>En la lista de mesas, haz clic en <strong>"Unirse"</strong> en la mesa que desees. La mesa debe tener estado "Esperando" y tener espacio disponible (máximo 5 jugadores).</p>
+      <p>En la lista de mesas, haz clic en <strong>"Unirse"</strong> en la mesa que desees. La mesa debe tener estado "Esperando" y tener espacio disponible (cada mesa indica su capacidad máxima al lado del nombre).</p>
 
       <figure class="docs-figure">
         <img src="/imgs/cap/cap002.png" alt="Crear mesa" style="max-width:100%;border:1px solid var(--border-color);border-radius:var(--radius-md);">
-        <figcaption>Modal de creación de mesa con nombre y contraseña opcional</figcaption>
+        <figcaption>Modal de creación de mesa con nombre, máximo de jugadores y contraseña opcional</figcaption>
       </figure>
 
       <div class="callout warning">
@@ -537,7 +538,7 @@
       <p>Actualmente no hay modo espectador. Solo los jugadores en la mesa ven la partida.</p>
 
       <h4>¿Cómo funciona el ranking?</h4>
-      <p>El ranking global acumula los puntos de todas tus partidas. Cada vez que terminas una partida, tus puntos se suman a tu total histórico. Gana el que más puntos acumule.</p>
+      <p>El ranking global guarda tu puntuación más alta de todas tus partidas. Si consigues superar tu récord anterior, se actualiza automáticamente. El ranking ordena a los jugadores de mayor a menor puntuación.</p>
     </section>
 
     <!-- ═══════════════════════════════════════════════════ -->

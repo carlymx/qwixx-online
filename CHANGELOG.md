@@ -3,6 +3,28 @@
 > **Formato:** [Keep a Changelog](https://keepachangelog.com/)
 > **Versiones:** [SemVer](https://semver.org/)
 
+## [0.9.2] — 2026-06-21
+
+### Corregido
+
+- **Bloqueo de fila**: ahora el candado cuenta como una marca adicional (+1 a la puntuación) y se muestra visualmente con una X sobre el candado, igual que los números tachados.
+- **Versión**: actualizada a v0.9.2.
+
+## [0.9.0] — 2026-06-21
+
+### Añadido
+
+- **Panel de estadísticas del servidor** en el lobby: indicador 🔴/🟢 de conexión a DB, conexiones actuales/pico/totales, partidas jugadas, uptime.
+- **Adaptador de almacenamiento**: PostgreSQL con fallback automático a JSON, seleccionado mediante la variable de entorno `DATABASE_URL`.
+- **Selector de máximo de jugadores** (1-5, por defecto 5) al crear una mesa.
+- **Persistencia de rankings y estadísticas** en PostgreSQL cuando está disponible.
+
+### Cambiado
+
+- **Ranking**: refactorizado a un adaptador `db/` con interfaz unificada (`loadRankings`, `saveRankings`, `loadStats`, etc.).
+- **Chat de mesa**: ya no usa HTTP POST a `localhost` para actualizar rankings, llama al adaptador directamente.
+- `.gitignore`: añadidos `data/rankings.json`, `data/stats.json` y `render_db.txt`.
+
 ## [0.8.8] — 2026-06-21
 
 ### Cambiado

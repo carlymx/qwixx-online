@@ -9,7 +9,7 @@
   <title>Qwixx Online</title>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
-  <script>const VERSION = 'v0.8.8';</script>
+  <script>const VERSION = 'v0.9.2';</script>
 <body>
   <div id="app">
 
@@ -30,7 +30,7 @@
     <!-- ═══ LOBBY VIEW ═══ -->
     <div id="view-lobby" class="view">
       <header class="topbar">
-        <span class="logo">🎲 Qwixx <span class="version">v0.8.8</span></span>
+        <span class="logo">🎲 Qwixx <span class="version">v0.9.2</span></span>
         <div class="spacer"></div>
         <span class="clock" id="clock-lobby">--:--:--</span>
         <button id="btn-help" class="btn-icon" title="Ayuda">❓</button>
@@ -51,6 +51,11 @@
             <h2>🎮 Mesas de Juego</h2>
             <div class="tables-list" id="tables-list"></div>
             <button id="btn-create-table" class="btn btn-success" style="margin-top:var(--spacing-sm);">+ Crear Mesa</button>
+          </div>
+
+          <!-- Server Stats -->
+          <div class="lobby-section card" id="server-stats-section">
+            <div id="server-stats-content" class="stats-content"></div>
           </div>
 
           <!-- Rankings -->
@@ -75,7 +80,7 @@
     <!-- ═══ GAME VIEW ═══ -->
     <div id="view-game" class="view">
       <header class="topbar">
-        <span class="logo">🎲 Qwixx <span class="version">v0.8.8</span></span>
+        <span class="logo">🎲 Qwixx <span class="version">v0.9.2</span></span>
         <span id="game-table-name" class="topbar-title"></span>
         <div class="spacer"></div>
         <span class="clock" id="clock-game">--:--:--</span>
@@ -147,6 +152,16 @@
       <div class="flex flex-col gap-sm" style="margin-bottom:var(--spacing-md);">
         <label style="font-size:var(--font-size-sm);font-weight:500;">Contraseña <span class="text-muted" style="font-weight:normal;">(opcional)</span></label>
         <input type="password" id="create-table-password" class="input" placeholder="Dejar vacío para mesa pública" maxlength="20">
+      </div>
+      <div class="flex flex-col gap-sm" style="margin-bottom:var(--spacing-md);">
+        <label style="font-size:var(--font-size-sm);font-weight:500;">Máximo de jugadores</label>
+        <select id="create-table-max-players" class="input">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5" selected>5</option>
+        </select>
       </div>
       <div class="btn-row">
         <button id="btn-create-table-cancel" class="btn btn-secondary">Cancelar</button>

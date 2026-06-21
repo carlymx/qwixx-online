@@ -1,6 +1,8 @@
 node_modules/
 .env
 data/ranking.json
+data/rankings.json
+data/stats.json
 *.log
 .DS_Store
 Thumbs.db
@@ -10,3 +12,4 @@ DESIGN.md
 AUTORIA.md
 DOCS_ARCHITECTURE.md
 RNG_REFERENCE.md
+render_db.txt

@@ -92,7 +92,56 @@ const Lobby = {
     const name = nameInput ? nameInput.value.trim() : '';
     const passInput = document.getElementById('create-table-password');
     const password = passInput ? passInput.value : '';
-    App.socket.emit('create_table', { name, password });
+    const maxInput = document.getElementById('create-table-max-players');
+    const maxPlayers = maxInput ? parseInt(maxInput.value) || 5 : 5;
+    App.socket.emit('create_table', { name, password, maxPlayers });
     this.hideCreateTableModal();
+  },
+
+  async fetchStats() {
+    try {
+      const res = await fetch('/api/stats');
+      const stats = await res.json();
+      this.renderStats(stats);
+    } catch (e) {
+      // ignore
+    }
+  },
+
+  renderStats(stats) {
+    const container = document.getElementById('server-stats-content');
+    if (!container) return;
+    const dbIndicator = stats.isConnected ? '🟢' : '🔴';
+    const lastRestart = new Date(stats.lastRestart);
+    const now = new Date();
+    const diff = Math.floor((now - lastRestart) / 1000);
+    const days = Math.floor(diff / 86400);
+    const hours = Math.floor((diff % 86400) / 3600);
+    const mins = Math.floor((diff % 3600) / 60);
+
+    container.innerHTML = `
+      <span class="stats-db-indicator">${dbIndicator}</span>
+      <span class="stats-version">v0.9.2</span>
+      <span class="stats-sep">·</span>
+      <span>🟢</span> <span class="stats-label">Conexiones:</span> <span class="stats-value">${stats.currentConnections}</span> <span class="stats-muted">(pico: ${stats.peakConnections})</span>
+      <span class="stats-sep">·</span>
+      <span>🔢</span> <span class="stats-label">Conexiones totales:</span> <span class="stats-value">${stats.totalConnections}</span>
+      <span class="stats-sep">·</span>
+      <span>🎲</span> <span class="stats-label">Partidas jugadas:</span> <span class="stats-value">${stats.totalGamesPlayed}</span>
+      <span class="stats-sep">·</span>
+      <span>🕐</span> <span class="stats-label">Último reinicio:</span> <span class="stats-value">${days > 0 ? `${days}d ` : ''}${hours}h ${mins}m</span>
+    `;
+  },
+
+  startStatsPolling() {
+    this.fetchStats();
+    this._statsInterval = setInterval(() => this.fetchStats(), 30000);
+  },
+
+  stopStatsPolling() {
+    if (this._statsInterval) {
+      clearInterval(this._statsInterval);
+      this._statsInterval = null;
+    }
   }
 };

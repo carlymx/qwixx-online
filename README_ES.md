@@ -49,6 +49,18 @@ Puntuación: `n × (n+1) / 2` por fila (donde n = números marcados), menos pena
 
 ## Changelog
 
+### v0.9.2 — 2026-06-21
+- Corregido bloqueo de fila: el candado cuenta como una marca adicional (+1 a la puntuación) y se muestra con una X sobre el candado
+- Versión actualizada a v0.9.2
+
+### v0.9.0 — 2026-06-21
+- Panel de estadísticas del servidor en el lobby (conexiones, pico, partidas jugadas, uptime)
+- Adaptador de almacenamiento: PostgreSQL con fallback a JSON, seleccionado vía `DATABASE_URL`
+- Selector de máximo de jugadores (1-5) al crear mesa
+- Rankings y estadísticas persisten en PostgreSQL cuando está disponible
+- Indicador rojo/verde del estado de conexión a la base de datos
+- `.gitignore` actualizado: `data/rankings.json`, `data/stats.json`, `render_db.txt`
+
 ### v0.8.8 — 2026-06-21
 - Ranking: solo se actualiza la puntuación si la nueva es superior
 - Salir de partida ahora muestra un modal de confirmación

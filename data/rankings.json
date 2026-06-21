@@ -23,6 +23,13 @@
       "score": 39
     },
     {
+      "username": "Pixel",
+      "score": 36,
+      "games": 12,
+      "wins": 10,
+      "lastPlayed": "2026-06-21T20:09:29.366Z"
+    },
+    {
       "username": "Nova",
       "score": 25
     },
@@ -35,11 +42,11 @@
       "score": 9
     },
     {
-      "username": "Pixel",
+      "username": "Coral",
       "score": 0,
-      "games": 7,
-      "wins": 5,
-      "lastPlayed": "2026-06-21T00:13:37.632Z"
+      "games": 1,
+      "wins": 1,
+      "lastPlayed": "2026-06-21T18:30:23.751Z"
     }
   ]
 }

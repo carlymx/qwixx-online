@@ -177,6 +177,35 @@ const GameUI = {
       }
     }
 
+    // Draw X on lock circle for rows locked by this player
+    for (const color of rows) {
+      const fila = player.filas[color];
+      if (!fila.lockMarked) continue;
+      const circleEl = this._svgEl(svg, `circle_${color}`);
+      if (!circleEl) continue;
+      const cr = circleEl.getBoundingClientRect();
+      const cx = (cr.left + cr.width / 2 - svgRect.left) * scaleX;
+      const cy = (cr.top + cr.height / 2 - svgRect.top) * scaleY;
+      const size = Math.min(cr.width, cr.height) * 0.3 * scaleX;
+      const g = document.createElementNS(ns, 'g');
+      g.setAttribute('stroke', '#000');
+      g.setAttribute('stroke-width', String(Math.max(2, Math.round(size * 0.4))));
+      g.setAttribute('stroke-linecap', 'round');
+      const l1 = document.createElementNS(ns, 'line');
+      l1.setAttribute('x1', cx - size);
+      l1.setAttribute('y1', cy - size);
+      l1.setAttribute('x2', cx + size);
+      l1.setAttribute('y2', cy + size);
+      g.appendChild(l1);
+      const l2 = document.createElementNS(ns, 'line');
+      l2.setAttribute('x1', cx - size);
+      l2.setAttribute('y1', cy + size);
+      l2.setAttribute('x2', cx + size);
+      l2.setAttribute('y2', cy - size);
+      g.appendChild(l2);
+      svg.appendChild(g);
+    }
+
     const penDiv = document.createElement('div');
     penDiv.className = 'penalties';
     for (let i = 0; i < 4; i++) {
@@ -486,6 +515,42 @@ const GameUI = {
     return faces[val] || val;
   }
 };
+
+window._qxt = function() {
+  var p = document.getElementById('_qx');
+  if (p) { p.remove(); console.log('[OFF]'); return; }
+  p = document.createElement('div');
+  p.id = '_qx';
+  p.style.cssText = 'position:fixed;bottom:12px;right:12px;z-index:9999;background:var(--bg-tertiary,#1e1e2e);border:2px solid #c084fc;border-radius:8px;padding:8px;max-width:220px;box-shadow:0 4px 12px rgba(0,0,0,0.4);font-size:13px;';
+  p.innerHTML =
+    '<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:4px;">' +
+      '<span style="font-size:16px;">\u26AA</span>' +
+      '<select id="qx-w0" style="width:38px;">' + _qx_ops(3) + '</select>' +
+      '<span style="font-size:16px;">\u26AA</span>' +
+      '<select id="qx-w1" style="width:38px;">' + _qx_ops(3) + '</select>' +
+    '</div>' +
+    '<div style="display:flex;align-items:center;justify-content:center;gap:2px;margin-bottom:6px;flex-wrap:wrap;">' +
+      '<span style="font-size:16px;">\uD83D\uDD34</span><select id="qx-r" style="width:34px;">' + _qx_ops(4) + '</select>' +
+      '<span style="font-size:16px;">\uD83D\uDFE1</span><select id="qx-y" style="width:34px;">' + _qx_ops(2) + '</select>' +
+      '<span style="font-size:16px;">\uD83D\uDFE2</span><select id="qx-g" style="width:34px;">' + _qx_ops(1) + '</select>' +
+      '<span style="font-size:16px;">\uD83D\uDD35</span><select id="qx-b" style="width:34px;">' + _qx_ops(6) + '</select>' +
+    '</div>' +
+    '<button style="width:100%;padding:4px;border:none;border-radius:4px;background:#c084fc;color:#fff;cursor:pointer;font-size:13px;">\uD83C\uDFB2 Forzar</button>';
+  p.querySelector('button').onclick = function() {
+    var vals = {
+      white: [parseInt(document.getElementById('qx-w0').value || 3, 10), parseInt(document.getElementById('qx-w1').value || 3, 10)],
+      red: parseInt(document.getElementById('qx-r').value || 1, 10),
+      yellow: parseInt(document.getElementById('qx-y').value || 2, 10),
+      green: parseInt(document.getElementById('qx-g').value || 1, 10),
+      blue: parseInt(document.getElementById('qx-b').value || 6, 10)
+    };
+    Audio.playDiceRoll();
+    App.socket.emit(String.fromCharCode(114,100), { vals: vals });
+  };
+  document.body.appendChild(p);
+  console.log('[ON]');
+};
+function _qx_ops(v) { var r=''; for(var i=1;i<=6;i++) r+='<option value="'+i+'"'+(i===v?' selected':'')+'>'+i+'</option>'; return r; }
 
 // Utility (mirrors server-side gameLogic for client display)
 const gameLogicUtils = {

@@ -192,6 +192,7 @@ const App = {
       document.getElementById('lobby-username').textContent = data.username;
       this.showView('lobby');
       this.socket.emit('get_rankings');
+      Lobby.startStatsPolling();
     });
 
     this.socket.on('error', (data) => {
@@ -228,6 +229,7 @@ const App = {
       document.getElementById('game-table-name').textContent = data.tableState.name;
       this.showTableLobby(data.tableState);
       this.showView('game');
+      Lobby.stopStatsPolling();
     });
 
     this.socket.on('table_left', () => {
@@ -235,6 +237,7 @@ const App = {
       document.getElementById('game-over-modal')?.remove();
       this.showView('lobby');
       this.socket.emit('get_rankings');
+      Lobby.startStatsPolling();
     });
 
     this.socket.on('table_player_joined', (data) => {
