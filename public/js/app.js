@@ -28,6 +28,9 @@ const App = {
     document.getElementById('btn-help')?.addEventListener('click', () => {
       window.open('/docs/', '_blank');
     });
+    document.getElementById('btn-help-game')?.addEventListener('click', () => {
+      window.open('/docs/', '_blank');
+    });
     document.getElementById('btn-create-table')?.addEventListener('click', () => {
       Lobby.showCreateTableModal();
     });
@@ -37,7 +40,7 @@ const App = {
     document.getElementById('btn-create-table-cancel')?.addEventListener('click', () => {
       Lobby.hideCreateTableModal();
     });
-    document.getElementById('btn-leave-game')?.addEventListener('click', () => this.leaveGame());
+    document.getElementById('btn-leave-game')?.addEventListener('click', () => this.showLeaveConfirm());
 
     document.getElementById('btn-refresh-rankings')?.addEventListener('click', () => {
       this.socket.emit('get_rankings');
@@ -146,6 +149,30 @@ const App = {
       msg.textContent = 'Esperando a que el anfitrión inicie la partida...';
       parent.appendChild(msg);
     }
+  },
+
+  showLeaveConfirm() {
+    const existing = document.querySelector('.modal-overlay.leave-confirm');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay active leave-confirm';
+    modal.innerHTML = `
+      <div class="modal-content" style="text-align:center;">
+        <h2>¿Salir de la partida?</h2>
+        <p style="margin-bottom:var(--spacing-lg);color:var(--text-secondary);">Perderás tu progreso en esta partida.</p>
+        <div class="btn-row" style="justify-content:center;">
+          <button class="btn btn-secondary" id="btn-leave-cancel">Cancelar</button>
+          <button class="btn btn-danger" id="btn-leave-confirm">Salir</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+
+    document.getElementById('btn-leave-cancel')?.addEventListener('click', () => modal.remove());
+    document.getElementById('btn-leave-confirm')?.addEventListener('click', () => {
+      modal.remove();
+      this.leaveGame();
+    });
   },
 
   leaveGame() {

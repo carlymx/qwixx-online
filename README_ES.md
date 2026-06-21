@@ -49,6 +49,11 @@ Puntuación: `n × (n+1) / 2` por fila (donde n = números marcados), menos pena
 
 ## Changelog
 
+### v0.8.8 — 2026-06-21
+- Ranking: solo se actualiza la puntuación si la nueva es superior
+- Salir de partida ahora muestra un modal de confirmación
+- Botón de ayuda añadido a la vista de juego
+
 ### v0.8.7 — 2026-06-21
 - Banner de advertencia en Acción 2 si el jugador activo no marcó nada en Acción 1
 - Dados de color ahora muestran caras Unicode como los blancos, ampliados a 52px

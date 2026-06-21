@@ -49,6 +49,11 @@ Scoring: `n × (n+1) / 2` per row (where n = marked numbers), minus penalties.
 
 ## Changelog
 
+### v0.8.8 — 2026-06-21
+- Ranking now only updates score if the new score is higher
+- Leave game now shows a confirmation modal
+- Help button added to game view topbar
+
 ### v0.8.7 — 2026-06-21
 - Penalty warning banner in Action 2 if the active player didn't mark anything in Action 1
 - Colored dice now show Unicode faces (like white dice), enlarged to 52px

@@ -3,6 +3,14 @@
 > **Formato:** [Keep a Changelog](https://keepachangelog.com/)
 > **Versiones:** [SemVer](https://semver.org/)
 
+## [0.8.8] — 2026-06-21
+
+### Cambiado
+
+- **Ranking**: ahora solo se actualiza la puntuación si la nueva es superior a la anterior, en lugar de sobrescribirla siempre.
+- **Salir de partida**: ahora muestra un modal de confirmación antes de abandonar.
+- **Ayuda**: añadido botón ❓ en la barra superior de la vista de juego.
+
 ## [0.8.7] — 2026-06-21
 
 ### Añadido

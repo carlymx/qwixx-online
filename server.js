@@ -48,7 +48,7 @@ app.post('/api/rankings', (req, res) => {
   for (const r of results) {
     const existing = data.rankings.find(e => e.username === r.username);
     if (existing) {
-      existing.score = r.score || 0;
+      if ((r.score || 0) > existing.score) existing.score = r.score || 0;
       existing.games = (existing.games || 0) + 1;
       if (r.win) existing.wins = (existing.wins || 0) + 1;
       existing.lastPlayed = new Date().toISOString();

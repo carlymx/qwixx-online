@@ -1,13 +1,6 @@
 {
   "rankings": [
     {
-      "username": "Pixel",
-      "score": 65,
-      "games": 6,
-      "wins": 4,
-      "lastPlayed": "2026-06-20T16:56:15.520Z"
-    },
-    {
       "username": "Luna",
       "score": 61,
       "games": 5,
@@ -40,6 +33,13 @@
     {
       "username": "Rayo",
       "score": 9
+    },
+    {
+      "username": "Pixel",
+      "score": 0,
+      "games": 7,
+      "wins": 5,
+      "lastPlayed": "2026-06-21T00:13:37.632Z"
     }
   ]
 }
