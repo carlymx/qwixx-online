@@ -1,6 +1,6 @@
 [Leer en español →](README_ES.md)
 
-![qwixx-online](/public/imgs/0001.png)
+![qwixx-online](/public/imgs/0002.png)
 
 # Qwixx Online
 

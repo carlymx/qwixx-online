@@ -28,22 +28,22 @@ const Lobby = {
       container.innerHTML = `<div class="text-muted">${t('lobby.noTables')}</div>`;
       return;
     }
-    container.innerHTML = tables.map(t => `
+    container.innerHTML = tables.map(tbl => `
       <div class="table-card">
         <div class="info">
-          <div class="table-name">${Chat.escape(t.name)}</div>
-          <div class="table-meta">${t('table.meta', { count: t.playerCount, max: t.maxPlayers, host: t.hostName })}</div>
+          <div class="table-name">${Chat.escape(tbl.name)}</div>
+          <div class="table-meta">${t('table.meta', { count: tbl.playerCount, max: tbl.maxPlayers, host: tbl.hostName })}</div>
         </div>
         <div class="flex items-center gap-sm">
-          ${t.hasPassword ? `<span class="lock-icon" title="${t('table.passwordProtected')}">🔒</span>` : ''}
-          ${t.status === 'playing'
+          ${tbl.hasPassword ? `<span class="lock-icon" title="${t('table.passwordProtected')}">🔒</span>` : ''}
+          ${tbl.status === 'playing'
             ? `<span class="status-badge playing">${t('table.playing')}</span>`
-            : t.playerCount >= t.maxPlayers
+            : tbl.playerCount >= tbl.maxPlayers
               ? `<span class="status-badge full">${t('table.full')}</span>`
               : `<span class="status-badge waiting">${t('table.waiting')}</span>`}
-          ${t.status === 'waiting' && t.playerCount < t.maxPlayers
-            ? `<button class="btn btn-primary btn-join" data-table-id="${t.id}" ${t.hasPassword ? 'data-has-password="1"' : ''}>${t('table.join')}</button>`
-            : t.status === 'waiting' && t.playerCount >= t.maxPlayers
+          ${tbl.status === 'waiting' && tbl.playerCount < tbl.maxPlayers
+            ? `<button class="btn btn-primary btn-join" data-table-id="${tbl.id}" ${tbl.hasPassword ? 'data-has-password="1"' : ''}>${t('table.join')}</button>`
+            : tbl.status === 'waiting' && tbl.playerCount >= tbl.maxPlayers
               ? `<button class="btn btn-join disabled" disabled>${t('table.join')}</button>`
               : ''}
         </div>

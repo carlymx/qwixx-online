@@ -19,15 +19,29 @@
       "score": 43
     },
     {
+      "username": "CaRLy",
+      "score": 40,
+      "games": 7,
+      "wins": 7,
+      "lastPlayed": "2026-06-22T15:34:23.074Z"
+    },
+    {
       "username": "Dado",
       "score": 39
     },
     {
       "username": "Pixel",
       "score": 36,
-      "games": 15,
+      "games": 16,
       "wins": 12,
-      "lastPlayed": "2026-06-22T10:08:45.671Z"
+      "lastPlayed": "2026-06-22T15:34:23.074Z"
+    },
+    {
+      "username": "Coral",
+      "score": 27,
+      "games": 4,
+      "wins": 3,
+      "lastPlayed": "2026-06-22T15:34:23.074Z"
     },
     {
       "username": "Nova",
@@ -38,22 +52,22 @@
       "score": 17
     },
     {
-      "username": "Coral",
-      "score": 16,
-      "games": 3,
-      "wins": 3,
-      "lastPlayed": "2026-06-22T10:10:19.588Z"
-    },
-    {
       "username": "Rayo",
       "score": 9
     },
     {
-      "username": "CaRLy",
-      "score": 1,
-      "games": 4,
-      "wins": 4,
-      "lastPlayed": "2026-06-22T14:49:49.917Z"
+      "username": "11",
+      "score": 0,
+      "games": 1,
+      "wins": 1,
+      "lastPlayed": "2026-06-22T15:26:28.154Z"
+    },
+    {
+      "username": "22",
+      "score": 0,
+      "games": 1,
+      "wins": 1,
+      "lastPlayed": "2026-06-22T15:26:28.154Z"
     }
   ]
 }
