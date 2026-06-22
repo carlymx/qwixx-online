@@ -6,6 +6,8 @@
 
 Implementación multijugador del juego de dados **Qwixx** usando HTML5/CSS/JS, Node.js y Socket.IO.
 
+> 🎲 **Jugar online:** [qwixx-online-n0xt.onrender.com](https://qwixx-online-n0xt.onrender.com/) (próximamente dominio propio)
+
 ## Características
 
 - Multijugador en tiempo real con Socket.IO

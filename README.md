@@ -6,6 +6,8 @@
 
 A full-stack multiplayer implementation of the dice game **Qwixx** using HTML5/CSS/JS, Node.js, and Socket.IO.
 
+> 🎲 **Play online:** [qwixx-online-n0xt.onrender.com](https://qwixx-online-n0xt.onrender.com/) (custom domain coming soon)
+
 ## Features
 
 - Real-time multiplayer with Socket.IO
