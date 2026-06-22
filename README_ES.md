@@ -49,6 +49,12 @@ Puntuación: `n × (n+1) / 2` por fila (donde n = números marcados), menos pena
 
 ## Changelog
 
+### v0.9.4 — 2026-06-22
+- Estado de mesas en lobby: 3 estados (Esperando, Llena, Jugando) con botón Unirse desactivado cuando está llena
+- Corregido: mensajes de chat duplicados al entrar/salir de mesa
+- Corregido: lista de mesas no se actualizaba al iniciar/terminar partida
+- Versión actualizada a v0.9.4
+
 ### v0.9.3 — 2026-06-22
 - Mini-boards rediseñados: 11 cuadrados numerados + círculo de candado por fila en lugar de barras de progreso
 - Ranking global ahora muestra cabeceras de columna (Nombre, Puntuación, Ganadas/Jugadas) con los valores centrados

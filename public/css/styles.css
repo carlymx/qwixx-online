@@ -351,8 +351,12 @@ body {
 }
 .status-badge.waiting { background: #d1e7dd; color: #0f5132; }
 .status-badge.playing { background: #cff4fc; color: #055160; }
+.status-badge.full { background: #e2e3e5; color: #6c757d; }
 [data-theme="dark"] .status-badge.waiting { background: #0f5132; color: #d1e7dd; }
 [data-theme="dark"] .status-badge.playing { background: #055160; color: #cff4fc; }
+[data-theme="dark"] .status-badge.full { background: #495057; color: #ced4da; }
+
+.btn-join:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(1); }
 
 /* Server Stats */
 .stats-content {

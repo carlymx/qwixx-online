@@ -188,6 +188,7 @@ io.on('connection', (socket) => {
       return;
     }
     startTurn(table.id);
+    broadcastTables();
     io.to(`table:${table.id}`).emit('game_started', { gameState: table.game });
     io.to(`table:${table.id}`).emit('chat_message', {
       username: 'Sistema',
@@ -611,6 +612,7 @@ io.on('connection', (socket) => {
     })));
     db.increment('totalGamesPlayed');
     table.status = 'finished';
+    broadcastTables();
   }
 });
 

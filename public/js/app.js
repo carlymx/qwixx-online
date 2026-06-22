@@ -101,7 +101,7 @@ const App = {
             </div>
           `).join('')}
         </div>
-        ${isHost ? '<button id="btn-start-game" class="btn btn-success" style="font-size:var(--font-size-lg);padding:12px 32px;">🎮 Iniciar Partida</button>' : '<p class="text-muted">Esperando a que el anfitrión inicie la partida...</p>'}
+        ${isHost ? '<button id="btn-start-game" class="btn btn-success" style="font-size:var(--font-size-lg);padding:12px 32px;">🎮 Iniciar Partida</button>' : '<p class="text-muted espera-anfitrion">Esperando a que el anfitrión inicie la partida...</p>'}
         <p class="text-muted" style="margin-top:var(--spacing-sm);font-size:var(--font-size-sm);">Mínimo 1 jugador</p>
       </div>
     `;
@@ -238,24 +238,6 @@ const App = {
       this.showView('lobby');
       this.socket.emit('get_rankings');
       Lobby.startStatsPolling();
-    });
-
-    this.socket.on('table_player_joined', (data) => {
-      this.chatGame.addMessage({
-        username: 'Sistema',
-        text: `${data.username} se ha unido a la mesa`,
-        timestamp: Date.now(),
-        system: true
-      });
-    });
-
-    this.socket.on('table_player_left', (data) => {
-      this.chatGame.addMessage({
-        username: 'Sistema',
-        text: `${data.username} ha salido de la mesa`,
-        timestamp: Date.now(),
-        system: true
-      });
     });
 
     this.socket.on('table_players_update', (data) => {

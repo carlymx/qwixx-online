@@ -1,6 +1,6 @@
 {
   "name": "qwixx-online",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Qwixx multiplayer online game",
   "main": "server.js",
   "scripts": {

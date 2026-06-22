@@ -49,6 +49,12 @@ Scoring: `n × (n+1) / 2` per row (where n = marked numbers), minus penalties.
 
 ## Changelog
 
+### v0.9.4 — 2026-06-22
+- Table lobby status now shows 3 states (Waiting, Full, Playing) with disabled Join button when full
+- Fixed: duplicate system chat messages when joining/leaving a table
+- Fixed: lobby table list not updating when game starts/ends
+- Version bumped to v0.9.4
+
 ### v0.9.3 — 2026-06-22
 - Mini-boards redesigned: 11 numbered squares + lock circle per row instead of progress bars
 - Ranking table now shows column headers (Name, Score, Wins/Played) with centered values

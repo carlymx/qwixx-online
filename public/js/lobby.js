@@ -36,10 +36,16 @@ const Lobby = {
         </div>
         <div class="flex items-center gap-sm">
           ${t.hasPassword ? '<span class="lock-icon" title="Mesa protegida">🔒</span>' : ''}
-          <span class="status-badge ${t.status}">${t.status === 'waiting' ? 'Esperando' : 'Jugando'}</span>
-          ${t.status === 'waiting' && t.playerCount < 5
+          ${t.status === 'playing'
+            ? '<span class="status-badge playing">Jugando</span>'
+            : t.playerCount >= t.maxPlayers
+              ? '<span class="status-badge full">Mesa llena</span>'
+              : '<span class="status-badge waiting">Esperando jugadores...</span>'}
+          ${t.status === 'waiting' && t.playerCount < t.maxPlayers
             ? `<button class="btn btn-primary btn-join" data-table-id="${t.id}" ${t.hasPassword ? 'data-has-password="1"' : ''}>Unirse</button>`
-            : ''}
+            : t.status === 'waiting' && t.playerCount >= t.maxPlayers
+              ? `<button class="btn btn-join disabled" disabled>Unirse</button>`
+              : ''}
         </div>
       </div>
     `).join('');
@@ -128,7 +134,7 @@ const Lobby = {
 
     container.innerHTML = `
       <span class="stats-db-indicator">${dbIndicator}</span>
-      <span class="stats-version">v0.9.3</span>
+      <span class="stats-version">v0.9.4</span>
       <span class="stats-sep">·</span>
       <span>🟢</span> <span class="stats-label">Conexiones:</span> <span class="stats-value">${stats.currentConnections}</span> <span class="stats-muted">(pico: ${stats.peakConnections})</span>
       <span class="stats-sep">·</span>

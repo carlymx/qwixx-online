@@ -3,6 +3,17 @@
 > **Formato:** [Keep a Changelog](https://keepachangelog.com/)
 > **Versiones:** [SemVer](https://semver.org/)
 
+## [0.9.4] — 2026-06-22
+
+### Cambiado
+
+- **Estado de mesas en lobby**: ahora muestra 3 estados (Esperando jugadores..., Mesa llena, Jugando). El botón Unirse se desactiva y se pone gris cuando la mesa está llena, y desaparece cuando la partida comienza.
+
+### Corregido
+
+- **Chat duplicado**: los mensajes de sistema al entrar/salir de una mesa ya no aparecen duplicados.
+- **Lobby desactualizado**: la lista de mesas ahora se actualiza correctamente al iniciar una partida (cambia a "Jugando") y al terminarla (desaparece de la lista).
+
 ## [0.9.3] — 2026-06-22
 
 ### Cambiado
