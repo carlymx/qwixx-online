@@ -3,6 +3,13 @@
 > **Formato:** [Keep a Changelog](https://keepachangelog.com/)
 > **Versiones:** [SemVer](https://semver.org/)
 
+## [0.9.3] — 2026-06-22
+
+### Cambiado
+
+- **Mini-boards de otros jugadores**: en lugar de barras de progreso, ahora se muestran 11 cuadrados por fila (uno por cada número) más un círculo para el candado. Los cuadrados se rellenan con el color de la fila al marcar números, y el círculo se rellena al bloquear la fila.
+- **Ranking global**: ahora muestra cabeceras de columna (Nombre, Puntuación, Ganadas/Jugadas) con los valores centrados.
+
 ## [0.9.2] — 2026-06-21
 
 ### Corregido

@@ -65,7 +65,14 @@ const Lobby = {
       container.innerHTML = '<div class="text-muted">Aún no hay rankings</div>';
       return;
     }
-    container.innerHTML = rankings.map((r, i) => `
+    container.innerHTML = `
+      <li class="ranking-header">
+        <span class="rank"></span>
+        <span class="name">Nombre</span>
+        <span class="score">Puntuación</span>
+        <span class="stats">Ganadas/Jugadas</span>
+      </li>
+    ` + rankings.map((r, i) => `
       <li class="ranking-entry ${i < 3 ? 'top-' + (i+1) : ''}">
         <span class="rank">${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i+1}`}</span>
         <span class="name">${Chat.escape(r.username)}</span>
@@ -121,7 +128,7 @@ const Lobby = {
 
     container.innerHTML = `
       <span class="stats-db-indicator">${dbIndicator}</span>
-      <span class="stats-version">v0.9.2</span>
+      <span class="stats-version">v0.9.3</span>
       <span class="stats-sep">·</span>
       <span>🟢</span> <span class="stats-label">Conexiones:</span> <span class="stats-value">${stats.currentConnections}</span> <span class="stats-muted">(pico: ${stats.peakConnections})</span>
       <span class="stats-sep">·</span>

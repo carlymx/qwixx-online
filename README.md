@@ -49,6 +49,11 @@ Scoring: `n × (n+1) / 2` per row (where n = marked numbers), minus penalties.
 
 ## Changelog
 
+### v0.9.3 — 2026-06-22
+- Mini-boards redesigned: 11 numbered squares + lock circle per row instead of progress bars
+- Ranking table now shows column headers (Name, Score, Wins/Played) with centered values
+- Version bumped to v0.9.3
+
 ### v0.9.2 — 2026-06-21
 - Fixed row lock: lock now counts as an extra mark (+1 to score) and shows an X overlay on the lock icon
 - Version bumped to v0.9.2

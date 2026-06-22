@@ -269,10 +269,14 @@ const GameUI = {
           ${['red','yellow','green','blue'].map(c => {
             const fila = p.filas[c];
             if (!fila) return '';
-            const pct = Math.min((fila.count / 12) * 100, 100);
             return `<div class="mini-row">
               <span class="mini-label">${c === 'red' ? '🔴' : c === 'yellow' ? '🟡' : c === 'green' ? '🟢' : '🔵'}</span>
-              <div class="mini-bar ${c}" style="width:${pct}%"></div>
+              <div class="mini-cells">
+                ${fila.marked.map((m, i) => `
+                  <div class="mini-cell ${c}${m ? ' filled' : ''}"></div>
+                `).join('')}
+                <div class="mini-lock ${c}${fila.locked ? ' locked' : ''}"></div>
+              </div>
             </div>`;
           }).join('')}
         </div>

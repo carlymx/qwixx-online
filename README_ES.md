@@ -49,6 +49,11 @@ Puntuación: `n × (n+1) / 2` por fila (donde n = números marcados), menos pena
 
 ## Changelog
 
+### v0.9.3 — 2026-06-22
+- Mini-boards rediseñados: 11 cuadrados numerados + círculo de candado por fila en lugar de barras de progreso
+- Ranking global ahora muestra cabeceras de columna (Nombre, Puntuación, Ganadas/Jugadas) con los valores centrados
+- Versión actualizada a v0.9.3
+
 ### v0.9.2 — 2026-06-21
 - Corregido bloqueo de fila: el candado cuenta como una marca adicional (+1 a la puntuación) y se muestra con una X sobre el candado
 - Versión actualizada a v0.9.2

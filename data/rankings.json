@@ -25,9 +25,9 @@
     {
       "username": "Pixel",
       "score": 36,
-      "games": 12,
-      "wins": 10,
-      "lastPlayed": "2026-06-21T20:09:29.366Z"
+      "games": 14,
+      "wins": 11,
+      "lastPlayed": "2026-06-22T01:10:14.980Z"
     },
     {
       "username": "Nova",
@@ -38,15 +38,15 @@
       "score": 17
     },
     {
-      "username": "Rayo",
-      "score": 9
+      "username": "Coral",
+      "score": 16,
+      "games": 2,
+      "wins": 2,
+      "lastPlayed": "2026-06-22T01:10:14.980Z"
     },
     {
-      "username": "Coral",
-      "score": 0,
-      "games": 1,
-      "wins": 1,
-      "lastPlayed": "2026-06-21T18:30:23.751Z"
+      "username": "Rayo",
+      "score": 9
     }
   ]
 }
