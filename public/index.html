@@ -9,7 +9,7 @@
   <title>Qwixx Online</title>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
-  <script>const VERSION = 'v0.9.4';</script>
+  <script>const VERSION = 'v0.9.5';</script>
 <body>
   <div id="app">
 
@@ -17,24 +17,25 @@
     <div id="view-login" class="view active">
       <div class="login-box">
         <h1>🎲 Qwixx</h1>
-        <p class="subtitle">Juego de dados multijugador online</p>
+        <p class="subtitle" data-i18n="login.subtitle">Juego de dados multijugador online</p>
         <div class="input-group">
-          <label for="login-name">Nombre de usuario</label>
-          <input type="text" id="login-name" class="input" placeholder="Tu nombre..." maxlength="20" autocomplete="off">
+          <label for="login-name" data-i18n="login.nameLabel">Nombre de usuario</label>
+          <input type="text" id="login-name" class="input" placeholder="Tu nombre..." data-i18n-placeholder="login.namePlaceholder" maxlength="20" autocomplete="off">
         </div>
         <div id="login-error" class="error-msg"></div>
-        <button id="btn-login" class="btn btn-primary" style="width:100%;justify-content:center;">Entrar</button>
+        <button id="btn-login" class="btn btn-primary" style="width:100%;justify-content:center;" data-i18n="login.button">Entrar</button>
       </div>
     </div>
 
     <!-- ═══ LOBBY VIEW ═══ -->
     <div id="view-lobby" class="view">
       <header class="topbar">
-        <span class="logo">🎲 Qwixx <span class="version">v0.9.4</span></span>
+        <span class="logo">🎲 Qwixx <span class="version">v0.9.5</span></span>
         <div class="spacer"></div>
         <span class="clock" id="clock-lobby">--:--:--</span>
-        <button id="btn-help" class="btn-icon" title="Ayuda">❓</button>
-        <button id="btn-theme" class="btn-icon" title="Cambiar tema"><span id="theme-icon">🌙</span></button>
+        <button id="btn-help" class="btn-icon" title="Ayuda" data-i18n-title="misc.help">❓</button>
+        <button id="btn-theme" class="btn-icon" title="Cambiar tema" data-i18n-title="misc.themeToggle"><span id="theme-icon">🌙</span></button>
+        <button id="btn-lang" class="btn-icon" title="Cambiar idioma" data-i18n-title="misc.langSwitch">🌐</button>
         <span id="lobby-username" class="username-badge"></span>
       </header>
 
@@ -42,15 +43,15 @@
         <div class="lobby-main">
           <!-- Players -->
           <div class="lobby-section card">
-            <h2>👥 Jugadores Conectados <span class="count" id="players-count"></span></h2>
+            <h2 data-i18n="lobby.players">👥 Jugadores Conectados <span class="count" id="players-count"></span></h2>
             <div class="players-grid" id="players-list"></div>
           </div>
 
           <!-- Tables -->
           <div class="lobby-section card">
-            <h2>🎮 Mesas de Juego</h2>
+            <h2 data-i18n="lobby.tables">🎮 Mesas de Juego</h2>
             <div class="tables-list" id="tables-list"></div>
-            <button id="btn-create-table" class="btn btn-success" style="margin-top:var(--spacing-sm);">+ Crear Mesa</button>
+            <button id="btn-create-table" class="btn btn-success" style="margin-top:var(--spacing-sm);" data-i18n="lobby.createTable">+ Crear Mesa</button>
           </div>
 
           <!-- Server Stats -->
@@ -60,18 +61,18 @@
 
           <!-- Rankings -->
           <div class="lobby-section card">
-            <h2>🏆 Ranking Global <button id="btn-refresh-rankings" class="btn-icon" title="Actualizar" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:14px;">🔄</button></h2>
+            <h2 data-i18n="lobby.ranking">🏆 Ranking Global <button id="btn-refresh-rankings" class="btn-icon" title="Actualizar" data-i18n-title="lobby.refresh" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:14px;">🔄</button></h2>
             <ol class="rankings-list" id="rankings-list"></ol>
           </div>
         </div>
 
         <!-- Chat -->
         <div class="chat-panel">
-          <div class="chat-header">💬 Chat Global</div>
+          <div class="chat-header" data-i18n="chat.global">💬 Chat Global</div>
           <div class="chat-messages" id="lobby-chat-messages"></div>
           <div class="chat-input-area">
-            <input type="text" id="lobby-chat-input" class="input" placeholder="Escribe un mensaje..." maxlength="500">
-            <button id="lobby-chat-send" class="btn btn-primary">▶</button>
+            <input type="text" id="lobby-chat-input" class="input" placeholder="Escribe un mensaje..." data-i18n-placeholder="chat.placeholder" maxlength="500">
+            <button id="lobby-chat-send" class="btn btn-primary" data-i18n="chat.send">▶</button>
           </div>
         </div>
       </div>
@@ -80,27 +81,28 @@
     <!-- ═══ GAME VIEW ═══ -->
     <div id="view-game" class="view">
       <header class="topbar">
-        <span class="logo">🎲 Qwixx <span class="version">v0.9.4</span></span>
+        <span class="logo">🎲 Qwixx <span class="version">v0.9.5</span></span>
         <span id="game-table-name" class="topbar-title"></span>
         <div class="spacer"></div>
         <span class="clock" id="clock-game">--:--:--</span>
         <span id="turn-timer" class="text-muted" style="font-size:13px;"></span>
-        <button id="btn-help-game" class="btn-icon" title="Ayuda">❓</button>
-        <button id="btn-theme-game" class="btn-icon" title="Cambiar tema"><span id="theme-icon-game">🌙</span></button>
-        <button id="btn-leave-game" class="btn btn-secondary" style="font-size:13px;padding:4px 12px;">Salir</button>
+        <button id="btn-help-game" class="btn-icon" title="Ayuda" data-i18n-title="misc.help">❓</button>
+        <button id="btn-theme-game" class="btn-icon" title="Cambiar tema" data-i18n-title="misc.themeToggle"><span id="theme-icon-game">🌙</span></button>
+        <button id="btn-lang-game" class="btn-icon" title="Cambiar idioma" data-i18n-title="misc.langSwitch">🌐</button>
+        <button id="btn-leave-game" class="btn btn-secondary" style="font-size:13px;padding:4px 12px;" data-i18n="leave.confirm">Salir</button>
       </header>
 
       <div class="game-layout" id="game-content">
         <div class="game-boards">
           <!-- Own board -->
           <div class="board" id="my-board">
-            <div class="text-muted">Esperando partida...</div>
+            <div class="text-muted" data-i18n="game.waitingGame">Esperando partida...</div>
           </div>
           <div class="game-status" id="game-status"></div>
 
           <!-- Other boards -->
           <div>
-            <div style="font-weight:600;margin-bottom:var(--spacing-sm);font-size:var(--font-size-sm);color:var(--text-secondary);">OTROS JUGADORES</div>
+            <div data-i18n="game.otherPlayers" style="font-weight:600;margin-bottom:var(--spacing-sm);font-size:var(--font-size-sm);color:var(--text-secondary);">OTROS JUGADORES</div>
             <div class="others-boards" id="others-boards"></div>
           </div>
         </div>
@@ -108,7 +110,7 @@
         <div class="game-sidebar">
           <!-- Dice area -->
           <div id="dice-area" class="dice-area">
-            <div class="text-muted">Esperando turno...</div>
+            <div class="text-muted" data-i18n="game.waitingTurn">Esperando turno...</div>
           </div>
 
           <!-- Scores -->
@@ -116,9 +118,9 @@
             <table>
               <thead>
                 <tr>
-                  <th>Jugador</th>
-                  <th style="text-align:center;">Penal.</th>
-                  <th style="text-align:right;">Puntos</th>
+                  <th data-i18n="game.scores.player">Jugador</th>
+                  <th data-i18n="game.scores.penalties" style="text-align:center;">Penal.</th>
+                  <th data-i18n="game.scores.points" style="text-align:right;">Puntos</th>
                 </tr>
               </thead>
               <tbody id="scores-body"></tbody>
@@ -127,11 +129,11 @@
 
           <!-- Game chat -->
           <div class="game-chat">
-            <div class="chat-header">💬 Chat</div>
+            <div class="chat-header" data-i18n="chat.game">💬 Chat</div>
             <div class="chat-messages" id="game-chat-messages"></div>
             <div class="chat-input-area">
-              <input type="text" id="game-chat-input" class="input" placeholder="Escribe..." maxlength="500">
-              <button id="game-chat-send" class="btn btn-primary">▶</button>
+              <input type="text" id="game-chat-input" class="input" placeholder="Escribe..." data-i18n-placeholder="chat.placeholderShort" maxlength="500">
+              <button id="game-chat-send" class="btn btn-primary" data-i18n="chat.send">▶</button>
             </div>
           </div>
         </div>
@@ -144,17 +146,17 @@
   <!-- Create Table Modal -->
   <div class="modal-overlay" id="modal-create-table">
     <div class="modal-content">
-      <h2>Crear Mesa</h2>
+      <h2 data-i18n="create.title">Crear Mesa</h2>
       <div class="flex flex-col gap-sm" style="margin-bottom:var(--spacing-md);">
-        <label style="font-size:var(--font-size-sm);font-weight:500;">Nombre de la mesa</label>
-        <input type="text" id="create-table-name" class="input" placeholder="Mesa de juego..." maxlength="30">
+        <label style="font-size:var(--font-size-sm);font-weight:500;" data-i18n="create.nameLabel">Nombre de la mesa</label>
+        <input type="text" id="create-table-name" class="input" placeholder="Mesa de juego..." data-i18n-placeholder="create.namePlaceholder" maxlength="30">
       </div>
       <div class="flex flex-col gap-sm" style="margin-bottom:var(--spacing-md);">
-        <label style="font-size:var(--font-size-sm);font-weight:500;">Contraseña <span class="text-muted" style="font-weight:normal;">(opcional)</span></label>
-        <input type="password" id="create-table-password" class="input" placeholder="Dejar vacío para mesa pública" maxlength="20">
+        <label style="font-size:var(--font-size-sm);font-weight:500;"><span data-i18n="create.passwordLabel">Contraseña</span> <span class="text-muted" style="font-weight:normal;" data-i18n="create.passwordOptional">(opcional)</span></label>
+        <input type="password" id="create-table-password" class="input" placeholder="Dejar vacío para mesa pública" data-i18n-placeholder="create.passwordPlaceholder" maxlength="20">
       </div>
       <div class="flex flex-col gap-sm" style="margin-bottom:var(--spacing-md);">
-        <label style="font-size:var(--font-size-sm);font-weight:500;">Máximo de jugadores</label>
+        <label style="font-size:var(--font-size-sm);font-weight:500;" data-i18n="create.maxPlayersLabel">Máximo de jugadores</label>
         <select id="create-table-max-players" class="input">
           <option value="1">1</option>
           <option value="2">2</option>
@@ -164,14 +166,15 @@
         </select>
       </div>
       <div class="btn-row">
-        <button id="btn-create-table-cancel" class="btn btn-secondary">Cancelar</button>
-        <button id="btn-create-table-confirm" class="btn btn-primary">Crear</button>
+        <button id="btn-create-table-cancel" class="btn btn-secondary" data-i18n="create.cancel">Cancelar</button>
+        <button id="btn-create-table-confirm" class="btn btn-primary" data-i18n="create.confirm">Crear</button>
       </div>
     </div>
   </div>
 
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
   <script src="js/storage.js"></script>
+  <script src="js/i18n.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/chat.js"></script>

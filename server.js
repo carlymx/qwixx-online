@@ -56,21 +56,21 @@ io.on('connection', (socket) => {
 
   socket.on('set_username', ({ name }) => {
     if (!name || typeof name !== 'string') {
-      socket.emit('error', { message: 'Nombre inválido' });
+      socket.emit('error', { _key: 'login.error.invalid' });
       return;
     }
     const trimmed = name.trim().slice(0, 20);
     if (trimmed.length < 2) {
-      socket.emit('error', { message: 'El nombre debe tener al menos 2 caracteres' });
+      socket.emit('error', { _key: 'login.error.short' });
       return;
     }
     if (!/^[a-zA-Z0-9\u00C0-\u024F\s\-_]+$/.test(trimmed)) {
-      socket.emit('error', { message: 'Caracteres no válidos en el nombre' });
+      socket.emit('error', { _key: 'login.error.chars' });
       return;
     }
     const exists = Array.from(connectedPlayers.values()).some(p => p.username === trimmed && p.connected);
     if (exists) {
-      socket.emit('error', { message: 'Ese nombre ya está en uso' });
+      socket.emit('error', { _key: 'login.error.taken' });
       return;
     }
     currentUser = {
@@ -117,7 +117,8 @@ io.on('connection', (socket) => {
     broadcastPlayers();
     io.to('lobby').emit('chat_message', {
       username: 'Sistema',
-      text: `${currentUser.username} ha creado la mesa "${tName}"`,
+      _key: 'chat.tableCreated',
+      _vars: { username: currentUser.username, tableName: tName },
       timestamp: Date.now(),
       system: true
     });
@@ -127,24 +128,24 @@ io.on('connection', (socket) => {
     if (!currentUser) return;
     const table = GameManager.getTable(tableId);
     if (!table) {
-      socket.emit('error', { message: 'La mesa no existe' });
+      socket.emit('error', { _key: 'error.tableNotFound' });
       return;
     }
     if (table.status !== 'waiting') {
-      socket.emit('error', { message: 'La partida ya comenzó' });
+      socket.emit('error', { _key: 'error.gameAlreadyStarted' });
       return;
     }
     if (table.players.length >= table.maxPlayers) {
-      socket.emit('error', { message: `Mesa llena (máx ${table.maxPlayers} jugadores)` });
+      socket.emit('error', { _key: 'error.tableFull', _vars: { max: table.maxPlayers } });
       return;
     }
     if (table.password && table.password !== password) {
-      socket.emit('error', { message: 'Contraseña incorrecta' });
+      socket.emit('error', { _key: 'error.wrongPassword' });
       return;
     }
     const added = GameManager.addPlayerToTable(tableId, currentUser.id, currentUser.username, password);
     if (!added) {
-      socket.emit('error', { message: 'No se pudo unir a la mesa' });
+      socket.emit('error', { _key: 'error.cantJoin' });
       return;
     }
     currentUser.inTable = tableId;
@@ -160,7 +161,8 @@ io.on('connection', (socket) => {
     broadcastPlayers();
     io.to(`table:${tableId}`).emit('chat_message', {
       username: 'Sistema',
-      text: `${currentUser.username} se ha unido a la mesa`,
+      _key: 'chat.playerJoined',
+      _vars: { username: currentUser.username },
       timestamp: Date.now(),
       system: true
     });
@@ -175,16 +177,16 @@ io.on('connection', (socket) => {
     const table = GameManager.getTable(currentUser.inTable);
     if (!table) return;
     if (table.hostId !== currentUser.id) {
-      socket.emit('error', { message: 'Solo el anfitrión puede iniciar la partida' });
+      socket.emit('error', { _key: 'error.hostOnly' });
       return;
     }
     if (table.players.length < 1) {
-      socket.emit('error', { message: 'La mesa está vacía' });
+      socket.emit('error', { _key: 'error.tableEmpty' });
       return;
     }
     const gameState = GameManager.startGame(currentUser.inTable);
     if (!gameState) {
-      socket.emit('error', { message: 'Error al iniciar la partida' });
+      socket.emit('error', { _key: 'error.cantStart' });
       return;
     }
     startTurn(table.id);
@@ -192,7 +194,7 @@ io.on('connection', (socket) => {
     io.to(`table:${table.id}`).emit('game_started', { gameState: table.game });
     io.to(`table:${table.id}`).emit('chat_message', {
       username: 'Sistema',
-      text: '¡La partida ha comenzado!',
+      _key: 'chat.gameStarted',
       timestamp: Date.now(),
       system: true
     });
@@ -204,7 +206,7 @@ io.on('connection', (socket) => {
     if (!table || !table.game || table.game.phase !== 'rolling') return;
     const player = table.game.players.find(p => p.id === currentUser.id);
     if (!player || !player.isActive) {
-      socket.emit('error', { message: 'No es tu turno' });
+      socket.emit('error', { _key: 'error.notYourTurn' });
       return;
     }
     const activeColors = ['red', 'yellow', 'green', 'blue'].filter(c => !table.game.lockedRows.includes(c));
@@ -226,7 +228,8 @@ io.on('connection', (socket) => {
     io.to(`table:${table.id}`).emit('dice_rolled', { dice, sum, action1Timeout: timerSeconds });
     io.to(`table:${table.id}`).emit('chat_message', {
       username: 'Sistema',
-      text: `${player.username} ha tirado los dados: ${dice.white[0]}+${dice.white[1]}=${sum}`,
+      _key: 'chat.diceRolled',
+      _vars: { username: player.username, d1: dice.white[0], d2: dice.white[1], sum },
       timestamp: Date.now(),
       system: true
     });
@@ -265,7 +268,8 @@ io.on('connection', (socket) => {
     io.to(`table:${table.id}`).emit('dice_rolled', { dice, sum, action1Timeout: timerSeconds });
     io.to(`table:${table.id}`).emit('chat_message', {
       username: 'Sistema',
-      text: `${player.username} ha tirado los dados: ${dice.white[0]}+${dice.white[1]}=${sum}`,
+      _key: 'chat.diceRolled',
+      _vars: { username: player.username, d1: dice.white[0], d2: dice.white[1], sum },
       timestamp: Date.now(),
       system: true
     });
@@ -306,29 +310,31 @@ io.on('connection', (socket) => {
       if (result.valid) {
         gameLogic.applyMark(player, color, sum);
         table.game.lastAction2Chosen = true;
+        const colorkey = color;
         io.to(`table:${table.id}`).emit('player_updated', {
           playerId: player.id,
           filas: player.filas,
           penalties: player.penalties
         });
-        const rowLabel = { red: 'Roja', yellow: 'Amarilla', green: 'Verde', blue: 'Azul' };
         io.to(`table:${table.id}`).emit('chat_message', {
           username: 'Sistema',
-          text: `${player.username} tachó ${sum} en fila ${rowLabel[color]}`,
+          _key: 'chat.markedAction2',
+          _vars: { username: player.username, sum, color: '$color.' + colorkey + '.f' },
           timestamp: Date.now(),
           system: true
         });
         if (result.locked) {
-          gameLogic.applyLock(table.game, color, player);
+          gameLogic.applyLock(table.game, colorkey, player);
           io.to(`table:${table.id}`).emit('player_updated', {
             playerId: player.id,
             filas: player.filas,
             penalties: player.penalties
           });
-          io.to(`table:${table.id}`).emit('row_locked', { color, playerId: player.id });
+          io.to(`table:${table.id}`).emit('row_locked', { color: colorkey, playerId: player.id });
           io.to(`table:${table.id}`).emit('chat_message', {
             username: 'Sistema',
-            text: `¡Fila ${rowLabel[color]} bloqueada por ${player.username}!`,
+            _key: 'chat.rowLockedBy',
+            _vars: { color: '$color.' + colorkey + '.f', username: player.username },
             timestamp: Date.now(),
             system: true
           });
@@ -336,7 +342,8 @@ io.on('connection', (socket) => {
       } else {
         socket.emit('chat_message', {
           username: 'Sistema',
-          text: `❌ No puedes tachar ${sum} en la fila ${({ red: 'Roja', yellow: 'Amarilla', green: 'Verde', blue: 'Azul' })[color]}. Elige otra combinación.`,
+          _key: 'chat.invalidMark',
+          _vars: { sum, color: '$color.' + color + '.f' },
           timestamp: Date.now(),
           system: true
         });
@@ -389,7 +396,8 @@ io.on('connection', (socket) => {
       });
       io.to(`table:${tableId}`).emit('chat_message', {
         username: 'Sistema',
-        text: `${currentUser.username} ha salido de la mesa`,
+        _key: 'chat.playerLeft',
+        _vars: { username: currentUser.username },
         timestamp: Date.now(),
         system: true
       });
@@ -475,8 +483,6 @@ io.on('connection', (socket) => {
     const game = table.game;
     const sum = game.dice.white[0] + game.dice.white[1];
     const pendingLocks = [];
-    const rowLabel = { red: 'Roja', yellow: 'Amarilla', green: 'Verde', blue: 'Azul' };
-    const action1Messages = [];
 
     for (const p of game.players) {
       const chosenColor = game.pendingChoices[p.id];
@@ -489,25 +495,34 @@ io.on('connection', (socket) => {
             filas: p.filas,
             penalties: p.penalties
           });
-          action1Messages.push(`${p.username} tachó ${sum} en fila ${rowLabel[chosenColor]}`);
+          io.to(`table:${table.id}`).emit('chat_message', {
+            username: 'Sistema',
+            _key: 'chat.markedAction1',
+            _vars: { username: p.username, sum, color: '$color.' + chosenColor + '.f' },
+            timestamp: Date.now(),
+            system: true
+          });
           if (result.locked) {
             pendingLocks.push({ playerId: p.id, color: chosenColor });
           }
         } else {
-          action1Messages.push(`${p.username} no pudo tachar (movimiento inválido)`);
+          io.to(`table:${table.id}`).emit('chat_message', {
+            username: 'Sistema',
+            _key: 'chat.invalidMove',
+            _vars: { username: p.username },
+            timestamp: Date.now(),
+            system: true
+          });
         }
       } else {
-        action1Messages.push(`${p.username} no tachó nada`);
+        io.to(`table:${table.id}`).emit('chat_message', {
+          username: 'Sistema',
+          _key: 'chat.skipped',
+          _vars: { username: p.username },
+          timestamp: Date.now(),
+          system: true
+        });
       }
-    }
-
-    for (const msg of action1Messages) {
-      io.to(`table:${table.id}`).emit('chat_message', {
-        username: 'Sistema',
-        text: msg,
-        timestamp: Date.now(),
-        system: true
-      });
     }
 
     for (const lock of pendingLocks) {
@@ -524,7 +539,8 @@ io.on('connection', (socket) => {
       });
       io.to(`table:${table.id}`).emit('chat_message', {
         username: 'Sistema',
-        text: `¡Fila ${rowLabel[lock.color]} bloqueada por ${player.username}!`,
+        _key: 'chat.rowLockedBy',
+        _vars: { color: '$color.' + lock.color + '.f', username: player.username },
         timestamp: Date.now(),
         system: true
       });
@@ -562,7 +578,6 @@ io.on('connection', (socket) => {
 
     if (!action1Chosen && !action2Chosen) {
       gameLogic.applyPenalty(activePlayer);
-      const rowLabel = { red: 'Roja', yellow: 'Amarilla', green: 'Verde', blue: 'Azul' };
       io.to(`table:${table.id}`).emit('player_updated', {
         playerId: activePlayer.id,
         filas: activePlayer.filas,
@@ -570,7 +585,8 @@ io.on('connection', (socket) => {
       });
       io.to(`table:${table.id}`).emit('chat_message', {
         username: 'Sistema',
-        text: `${activePlayer.username} recibe una penalización`,
+        _key: 'chat.penalty',
+        _vars: { username: activePlayer.username },
         timestamp: Date.now(),
         system: true
       });

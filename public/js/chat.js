@@ -29,7 +29,8 @@ function createChat(containerId, inputId, sendId) {
     el.className = `chat-msg${msg.system ? ' system' : ''}`;
     const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     if (msg.system) {
-      el.textContent = `${msg.text}`;
+      const text = msg._key ? t(msg._key, resolveVars(msg._vars)) : msg.text;
+      el.textContent = text;
     } else {
       el.innerHTML = `<span class="chat-time">${time}</span><span class="chat-user">${Chat.escape(msg.username)}</span>: ${Chat.escape(msg.text)}`;
     }
@@ -41,4 +42,17 @@ function createChat(containerId, inputId, sendId) {
   if (send) send.addEventListener('click', sendMessage);
 
   return { addMessage };
+}
+
+function resolveVars(vars) {
+  if (!vars) return {};
+  const resolved = {};
+  for (const [k, v] of Object.entries(vars)) {
+    if (typeof v === 'string' && v.startsWith('$')) {
+      resolved[k] = t(v.slice(1));
+    } else {
+      resolved[k] = v;
+    }
+  }
+  return resolved;
 }

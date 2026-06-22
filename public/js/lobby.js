@@ -25,26 +25,26 @@ const Lobby = {
     const container = document.getElementById('tables-list');
     if (!container) return;
     if (tables.length === 0) {
-      container.innerHTML = '<div class="text-muted">No hay mesas activas. ¡Crea una!</div>';
+      container.innerHTML = `<div class="text-muted">${t('lobby.noTables')}</div>`;
       return;
     }
     container.innerHTML = tables.map(t => `
       <div class="table-card">
         <div class="info">
           <div class="table-name">${Chat.escape(t.name)}</div>
-          <div class="table-meta">${t.playerCount}/${t.maxPlayers} jugadores · Creada por ${Chat.escape(t.hostName)}</div>
+          <div class="table-meta">${t('table.meta', { count: t.playerCount, max: t.maxPlayers, host: t.hostName })}</div>
         </div>
         <div class="flex items-center gap-sm">
-          ${t.hasPassword ? '<span class="lock-icon" title="Mesa protegida">🔒</span>' : ''}
+          ${t.hasPassword ? `<span class="lock-icon" title="${t('table.passwordProtected')}">🔒</span>` : ''}
           ${t.status === 'playing'
-            ? '<span class="status-badge playing">Jugando</span>'
+            ? `<span class="status-badge playing">${t('table.playing')}</span>`
             : t.playerCount >= t.maxPlayers
-              ? '<span class="status-badge full">Mesa llena</span>'
-              : '<span class="status-badge waiting">Esperando jugadores...</span>'}
+              ? `<span class="status-badge full">${t('table.full')}</span>`
+              : `<span class="status-badge waiting">${t('table.waiting')}</span>`}
           ${t.status === 'waiting' && t.playerCount < t.maxPlayers
-            ? `<button class="btn btn-primary btn-join" data-table-id="${t.id}" ${t.hasPassword ? 'data-has-password="1"' : ''}>Unirse</button>`
+            ? `<button class="btn btn-primary btn-join" data-table-id="${t.id}" ${t.hasPassword ? 'data-has-password="1"' : ''}>${t('table.join')}</button>`
             : t.status === 'waiting' && t.playerCount >= t.maxPlayers
-              ? `<button class="btn btn-join disabled" disabled>Unirse</button>`
+              ? `<button class="btn btn-join disabled" disabled>${t('table.join')}</button>`
               : ''}
         </div>
       </div>
@@ -54,7 +54,7 @@ const Lobby = {
       btn.addEventListener('click', () => {
         const tableId = btn.dataset.tableId;
         if (btn.dataset.hasPassword) {
-          const password = window.prompt('Esta mesa requiere contraseña:');
+          const password = window.prompt(t('table.passwordPrompt'));
           if (password === null) return;
           App.socket.emit('join_table', { tableId, password });
         } else {
@@ -65,18 +65,19 @@ const Lobby = {
   },
 
   renderRankings(rankings) {
+    Lobby._lastRankings = rankings;
     const container = document.getElementById('rankings-list');
     if (!container) return;
     if (!rankings || rankings.length === 0) {
-      container.innerHTML = '<div class="text-muted">Aún no hay rankings</div>';
+      container.innerHTML = `<div class="text-muted">${t('lobby.noRankings')}</div>`;
       return;
     }
     container.innerHTML = `
       <li class="ranking-header">
         <span class="rank"></span>
-        <span class="name">Nombre</span>
-        <span class="score">Puntuación</span>
-        <span class="stats">Ganadas/Jugadas</span>
+        <span class="name">${t('rankings.name')}</span>
+        <span class="score">${t('rankings.score')}</span>
+        <span class="stats">${t('rankings.stats')}</span>
       </li>
     ` + rankings.map((r, i) => `
       <li class="ranking-entry ${i < 3 ? 'top-' + (i+1) : ''}">
@@ -122,6 +123,7 @@ const Lobby = {
   },
 
   renderStats(stats) {
+    Lobby._lastStats = stats;
     const container = document.getElementById('server-stats-content');
     if (!container) return;
     const dbIndicator = stats.isConnected ? '🟢' : '🔴';
@@ -134,15 +136,15 @@ const Lobby = {
 
     container.innerHTML = `
       <span class="stats-db-indicator">${dbIndicator}</span>
-      <span class="stats-version">v0.9.4</span>
+      <span class="stats-version">v0.9.5</span>
       <span class="stats-sep">·</span>
-      <span>🟢</span> <span class="stats-label">Conexiones:</span> <span class="stats-value">${stats.currentConnections}</span> <span class="stats-muted">(pico: ${stats.peakConnections})</span>
+      <span>🟢</span> <span class="stats-label">${t('stats.connections')}</span> <span class="stats-value">${stats.currentConnections}</span> <span class="stats-muted">${t('stats.peak', { n: stats.peakConnections })}</span>
       <span class="stats-sep">·</span>
-      <span>🔢</span> <span class="stats-label">Conexiones totales:</span> <span class="stats-value">${stats.totalConnections}</span>
+      <span>🔢</span> <span class="stats-label">${t('stats.totalConnections')}</span> <span class="stats-value">${stats.totalConnections}</span>
       <span class="stats-sep">·</span>
-      <span>🎲</span> <span class="stats-label">Partidas jugadas:</span> <span class="stats-value">${stats.totalGamesPlayed}</span>
+      <span>🎲</span> <span class="stats-label">${t('stats.gamesPlayed')}</span> <span class="stats-value">${stats.totalGamesPlayed}</span>
       <span class="stats-sep">·</span>
-      <span>🕐</span> <span class="stats-label">Último reinicio:</span> <span class="stats-value">${days > 0 ? `${days}d ` : ''}${hours}h ${mins}m</span>
+      <span>🕐</span> <span class="stats-label">${t('stats.lastRestart')}</span> <span class="stats-value">${days > 0 ? `${days}d ` : ''}${hours}h ${mins}m</span>
     `;
   },
 

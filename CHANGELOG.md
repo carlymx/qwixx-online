@@ -3,6 +3,19 @@
 > **Formato:** [Keep a Changelog](https://keepachangelog.com/)
 > **Versiones:** [SemVer](https://semver.org/)
 
+## [0.9.5] — 2026-06-22
+
+### Añadido
+
+- **Internacionalización (i18n)**: sistema completo de traducciones cliente+servidor mediante claves con `t(key, vars)`. Soporte inicial para español e inglés (124 claves cada uno).
+- **Selector de idioma**: el botón 🌐 ahora muestra un menú desplegable con los idiomas disponibles, preparado para añadir más lenguas en el futuro. Detección automática del navegador con persistencia en localStorage.
+- **Traducción dinámica**: el evento `langchanged` permite cambiar de idioma en caliente sin recargar la página, repintando lobby, tabla de mesas y partida.
+
+### Cambiado
+
+- **Chat del servidor**: los mensajes ahora usan claves i18n (`_key` + `_vars`) en lugar de texto plano. Cada jugador ve los mensajes en su propio idioma.
+- **HTML**: 35 elementos ahora usan `data-i18n` para texto, placeholder y title, manteniendo español como fallback.
+
 ## [0.9.4] — 2026-06-22
 
 ### Cambiado

@@ -67,7 +67,7 @@ const App = {
   login() {
     const name = document.getElementById('login-name').value.trim();
     if (name.length < 2) {
-      document.getElementById('login-error').textContent = 'El nombre debe tener al menos 2 caracteres';
+      document.getElementById('login-error').textContent = t('login.error.short');
       return;
     }
     Storage.set('username', name);
@@ -81,6 +81,7 @@ const App = {
   },
 
   showTableLobby(tableState) {
+    App._lastTableState = tableState;
     const board = document.getElementById('my-board');
     const diceArea = document.getElementById('dice-area');
     const othersBoards = document.getElementById('others-boards');
@@ -90,9 +91,9 @@ const App = {
     const players = tableState.players || [];
 
     board.innerHTML = `
-      <div class="board-title">Mesa: ${Chat.escape(tableState.name)}</div>
+      <div class="board-title">${t('tableLobby.table', { name: tableState.name })}</div>
       <div class="card" style="padding:var(--spacing-lg);text-align:center;">
-        <p style="margin-bottom:var(--spacing-md);font-size:var(--font-size-lg);">Esperando jugadores...</p>
+        <p style="margin-bottom:var(--spacing-md);font-size:var(--font-size-lg);">${t('tableLobby.waiting')}</p>
         <div id="table-lobby-players" class="flex flex-col gap-sm" style="margin-bottom:var(--spacing-lg);">
           ${players.map(p => `
             <div class="player-chip" style="justify-content:center;">
@@ -101,8 +102,8 @@ const App = {
             </div>
           `).join('')}
         </div>
-        ${isHost ? '<button id="btn-start-game" class="btn btn-success" style="font-size:var(--font-size-lg);padding:12px 32px;">🎮 Iniciar Partida</button>' : '<p class="text-muted espera-anfitrion">Esperando a que el anfitrión inicie la partida...</p>'}
-        <p class="text-muted" style="margin-top:var(--spacing-sm);font-size:var(--font-size-sm);">Mínimo 1 jugador</p>
+        ${isHost ? `<button id="btn-start-game" class="btn btn-success" style="font-size:var(--font-size-lg);padding:12px 32px;">${t('tableLobby.startGame')}</button>` : `<p class="text-muted espera-anfitrion">${t('tableLobby.waitingHost')}</p>`}
+        <p class="text-muted" style="margin-top:var(--spacing-sm);font-size:var(--font-size-sm);">${t('tableLobby.minPlayers')}</p>
       </div>
     `;
 
@@ -110,7 +111,7 @@ const App = {
       this.socket.emit('start_game');
     });
 
-    if (diceArea) diceArea.innerHTML = '<div class="text-muted">La partida aún no ha comenzado</div>';
+    if (diceArea) diceArea.innerHTML = `<div class="text-muted">${t('tableLobby.notStarted')}</div>`;
     if (othersBoards) othersBoards.innerHTML = '';
     document.getElementById('scores-body').innerHTML = '';
   },
@@ -139,14 +140,14 @@ const App = {
       btn.id = 'btn-start-game';
       btn.className = 'btn btn-success';
       btn.style.cssText = 'font-size:var(--font-size-lg);padding:12px 32px;margin-top:8px;';
-      btn.textContent = '🎮 Iniciar Partida';
+      btn.textContent = t('tableLobby.startGame');
       btn.addEventListener('click', () => this.socket.emit('start_game'));
       parent.appendChild(btn);
     } else {
       const msg = document.createElement('p');
       msg.className = 'text-muted espera-anfitrion';
       msg.style.cssText = 'margin-top:8px;';
-      msg.textContent = 'Esperando a que el anfitrión inicie la partida...';
+      msg.textContent = t('tableLobby.waitingHost');
       parent.appendChild(msg);
     }
   },
@@ -159,11 +160,11 @@ const App = {
     modal.className = 'modal-overlay active leave-confirm';
     modal.innerHTML = `
       <div class="modal-content" style="text-align:center;">
-        <h2>¿Salir de la partida?</h2>
-        <p style="margin-bottom:var(--spacing-lg);color:var(--text-secondary);">Perderás tu progreso en esta partida.</p>
+        <h2>${t('leave.title')}</h2>
+        <p style="margin-bottom:var(--spacing-lg);color:var(--text-secondary);">${t('leave.message')}</p>
         <div class="btn-row" style="justify-content:center;">
-          <button class="btn btn-secondary" id="btn-leave-cancel">Cancelar</button>
-          <button class="btn btn-danger" id="btn-leave-confirm">Salir</button>
+          <button class="btn btn-secondary" id="btn-leave-cancel">${t('leave.cancel')}</button>
+          <button class="btn btn-danger" id="btn-leave-confirm">${t('leave.confirm')}</button>
         </div>
       </div>`;
     document.body.appendChild(modal);
@@ -196,11 +197,9 @@ const App = {
     });
 
     this.socket.on('error', (data) => {
-      console.error('Error:', data.message);
+      const msg = data._key ? t(data._key, data._vars || {}) : data.message;
       const loginError = document.getElementById('login-error');
-      if (loginError) {
-        loginError.textContent = data.message;
-      }
+      if (loginError) loginError.textContent = msg;
       Audio.playError();
     });
 
@@ -248,7 +247,7 @@ const App = {
       GameUI.initGame(data.gameState);
       this.chatGame.addMessage({
         username: 'Sistema',
-        text: '¡La partida ha comenzado!',
+        _key: 'chat.gameStarted',
         timestamp: Date.now(),
         system: true
       });
@@ -269,13 +268,14 @@ const App = {
       GameUI.renderScores();
       // Status
       if (GameUI.myPlayerId === data.playerId) {
-        GameUI.updateStatus('🎲 Tu turno — tira los dados');
+        GameUI.updateStatus(t('game.status.yourTurn'));
       } else {
-        GameUI.updateStatus(`⏳ Turno de ${data.username}, esperando a que tire los dados...`);
+        GameUI.updateStatus(t('game.status.waitingTurn', { name: data.username }));
       }
       this.chatGame.addMessage({
         username: 'Sistema',
-        text: `Turno de: ${data.username}`,
+        _key: 'chat.turnOf',
+        _vars: { username: data.username },
         timestamp: Date.now(),
         system: true
       });
@@ -289,7 +289,7 @@ const App = {
       GameUI.renderDice();
       Audio.playDiceRoll();
       GameUI.showAction1Prompt(data.sum, data.action1Timeout);
-      GameUI.updateStatus(`🎯 Dados blancos = ${data.sum}. Selecciona un número o pasa (no taches nada)`);
+      GameUI.updateStatus(t('game.status.diceRolled', { sum: data.sum }));
       if (data.action1Timeout) GameUI.startTimer('action1-timer', data.action1Timeout);
     });
 
@@ -300,9 +300,9 @@ const App = {
       const me = GameUI.players && GameUI.players.find(p => p.id === GameUI.myPlayerId);
       const activeP = GameUI.players && GameUI.players.find(p => p.isActive);
       if (me && me.isActive) {
-        GameUI.updateStatus('🎯 Elige una combinación (dado blanco + dado de color)');
+        GameUI.updateStatus(t('game.status.chooseCombo'));
       } else if (activeP) {
-        GameUI.updateStatus(`⏳ Esperando a ${activeP.username} para la acción 2...`);
+        GameUI.updateStatus(t('game.status.waitingAction2', { name: activeP.username }));
       }
       GameUI.showAction2Prompt(data);
     });
@@ -319,7 +319,7 @@ const App = {
       if (GameUI.gameState && GameUI.gameState.phase === 'action1' && GameUI.actionPending) {
         const activeP = GameUI.players.find(p => p.isActive);
         if (activeP && activeP.id !== GameUI.myPlayerId) {
-          GameUI.updateStatus(`⏳ Esperando a que termine el jugador ${activeP.username}...`);
+          GameUI.updateStatus(t('game.status.waitingPlayer', { name: activeP.username }));
         }
       }
     });
@@ -340,20 +340,31 @@ const App = {
       }
       GameUI.actionPending = false;
       GameUI.renderAll();
-      const rowLabel = { red: 'Roja', yellow: 'Amarilla', green: 'Verde', blue: 'Azul' };
       this.chatGame.addMessage({
         username: 'Sistema',
-        text: `🔒 ¡Fila ${rowLabel[data.color]} bloqueada!`,
+        _key: 'chat.rowLocked',
+        _vars: { color: '$color.' + data.color + '.f' },
         timestamp: Date.now(),
         system: true
       });
     });
 
     this.socket.on('game_over', (data) => {
-      GameUI.updateStatus('🏁 Partida terminada');
+      GameUI.updateStatus(t('game.status.gameOver'));
       GameUI.showGameOver(data.results);
     });
   }
 };
+
+document.addEventListener('langchanged', () => {
+  Lobby.renderPlayers(Lobby.players);
+  Lobby.renderTables(Lobby.tables);
+  if (Lobby._lastRankings) Lobby.renderRankings(Lobby._lastRankings);
+  if (Lobby._lastStats) Lobby.renderStats(Lobby._lastStats);
+  if (GameUI.players && GameUI.players.length > 0) GameUI.renderAll();
+  if (App._lastTableState && (!GameUI.players || GameUI.players.length === 0)) {
+    App.showTableLobby(App._lastTableState);
+  }
+});
 
 document.addEventListener('DOMContentLoaded', () => App.init());

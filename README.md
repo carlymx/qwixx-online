@@ -51,6 +51,13 @@ Scoring: `n × (n+1) / 2` per row (where n = marked numbers), minus penalties.
 
 ## Changelog
 
+### v0.9.5 — 2026-06-22
+- Internationalization (i18n): full client+server translation system using keys. Initial support for Spanish and English (124 keys each).
+- Language selector: 🌐 button now shows a dropdown menu with available languages. Auto-detects browser language, persists in localStorage.
+- Dynamic language switching via `langchanged` event — no page reload needed.
+- Server chat messages now use i18n keys (`_key` + `_vars`). Each player sees messages in their own language.
+- Version bumped to v0.9.5
+
 ### v0.9.4 — 2026-06-22
 - Table lobby status now shows 3 states (Waiting, Full, Playing) with disabled Join button when full
 - Fixed: duplicate system chat messages when joining/leaving a table

@@ -48,11 +48,11 @@ const GameUI = {
     const sum = game && game.dice ? (game.dice.white[0] + game.dice.white[1]) : 0;
 
     if (!this.svgTemplate) {
-      board.innerHTML = `<div class="board-title">Tu cartón — ${Chat.escape(player.username)}</div><div class="text-muted" style="text-align:center;padding:20px;">Cargando cartón...</div>`;
+      board.innerHTML = `<div class="board-title">${t('game.yourBoard', { name: player.username })}</div><div class="text-muted" style="text-align:center;padding:20px;">${t('game.loadingBoard')}</div>`;
       return;
     }
 
-    board.innerHTML = `<div class="board-title">Tu cartón — ${Chat.escape(player.username)}</div>`;
+    board.innerHTML = `<div class="board-title">${t('game.yourBoard', { name: player.username })}</div>`;
 
     const svg = this.svgTemplate.cloneNode(true);
     svg.classList.add('board-svg');
@@ -125,9 +125,9 @@ const GameUI = {
             GameUI.renderMyBoard(GameUI.players.find(p => p.id === GameUI.myPlayerId));
             const activeP = GameUI.players.find(p => p.isActive);
             if (activeP && activeP.id !== GameUI.myPlayerId) {
-              GameUI.updateStatus(`⏳ Esperando a ${activeP.username} en la Acción 1...`);
+              GameUI.updateStatus(t('game.action1.waiting', { name: activeP.username }));
             } else {
-              GameUI.updateStatus('⏳ Esperando a los demás jugadores en la Acción 1...');
+              GameUI.updateStatus(t('game.action1.waitingOthers'));
             }
           };
           panelEl.addEventListener('click', clickHandler);
@@ -218,7 +218,7 @@ const GameUI = {
     if (this.actionPending) {
       const skipBtn = document.createElement('div');
       skipBtn.style.cssText = 'text-align:center;margin-top:8px;';
-      skipBtn.innerHTML = `<button class="btn btn-danger" id="btn-skip-action1">Pasar (no tachar nada)</button>`;
+      skipBtn.innerHTML = `<button class="btn btn-danger" id="btn-skip-action1">${t('game.action1.skip')}</button>`;
       board.appendChild(skipBtn);
       setTimeout(() => {
         document.getElementById('btn-skip-action1')?.addEventListener('click', () => {
@@ -226,14 +226,14 @@ const GameUI = {
           GameUI.actionPending = false;
           GameUI.renderAll();
           const activeP = GameUI.players.find(p => p.isActive);
-          if (activeP && activeP.id !== GameUI.myPlayerId) {
-            GameUI.updateStatus(`⏳ Esperando a ${activeP.username} en la Acción 1...`);
-          } else {
-            GameUI.updateStatus('⏳ Esperando a los demás jugadores en la Acción 1...');
-          }
-        });
-      }, 0);
-    }
+            if (activeP && activeP.id !== GameUI.myPlayerId) {
+              GameUI.updateStatus(t('game.action1.waiting', { name: activeP.username }));
+            } else {
+              GameUI.updateStatus(t('game.action1.waitingOthers'));
+            }
+          });
+        }, 0);
+      }
   },
 
   _svgEl(svg, label) {
@@ -281,7 +281,7 @@ const GameUI = {
           }).join('')}
         </div>
         <div class="mini-stats">
-          <span>Penalizaciones: ${'⬜'.repeat(p.penalties)}${'⬛'.repeat(4 - p.penalties)}</span>
+          <span>${t('game.penalties')}: ${'⬜'.repeat(p.penalties)}${'⬛'.repeat(4 - p.penalties)}</span>
         </div>
       `;
       container.appendChild(el);
@@ -297,7 +297,7 @@ const GameUI = {
       const isSelf = p.id === this.myPlayerId;
       return `<tr class="${isActive ? 'is-active' : ''} ${isSelf ? 'is-self' : ''}">
         <td>${Chat.escape(p.username)}${isActive ? ' 🎯' : ''}</td>
-        <td class="penalty-cell">${p.penalties > 0 ? `-${p.penalties * 5}` : '—'}</td>
+        <td class="penalty-cell">${p.penalties > 0 ? `-${p.penalties * 5}` : t('misc.zeroDash')}</td>
         <td class="score-val">${gameLogicUtils.getTotalScore(p)}</td>
       </tr>`;
     }).join('');
@@ -321,7 +321,7 @@ const GameUI = {
 
     let html = '';
     if (activeP) {
-      html += `<div class="turn-info">Turno de: <strong>${Chat.escape(activeP.username)}</strong></div>`;
+      html += `<div class="turn-info">${t('game.turnOf', { name: activeP.username })}</div>`;
     }
 
     if (dice.white[0] > 0) {
@@ -348,14 +348,14 @@ const GameUI = {
 
       // Roll button
       if (isMyTurn && isRolling) {
-        html += `<div class="roll-area"><button class="btn-roll" id="btn-roll">🎲 Tirar Dados</button></div>`;
+        html += `<div class="roll-area"><button class="btn-roll" id="btn-roll">${t('game.rollDice')}</button></div>`;
       }
     } else {
       if (isMyTurn && isRolling) {
-        html += `<div class="turn-info">Es tu turno</div>`;
-        html += `<div class="roll-area"><button class="btn-roll" id="btn-roll">🎲 Tirar Dados</button></div>`;
+        html += `<div class="turn-info">${t('game.yourTurn')}</div>`;
+        html += `<div class="roll-area"><button class="btn-roll" id="btn-roll">${t('game.rollDice')}</button></div>`;
       } else {
-        html += `<div class="text-muted">Esperando tirada...</div>`;
+        html += `<div class="text-muted">${t('game.waitingRoll')}</div>`;
       }
     }
 
@@ -401,18 +401,18 @@ const GameUI = {
     }
 
     const warningHtml = !GameUI.action1Marked
-      ? `<div class="warning-banner">⚠️ No marcaste ningún número en la Acción 1. Si pasas ahora, recibirás <strong>-5 puntos</strong> de penalización.</div>`
+      ? `<div class="warning-banner">${t('game.action2.warning')}</div>`
       : '';
 
     let html = `<div class="action-prompt">
-      <h3>Acción 2: Elige una combinación</h3>
-      <p>Selecciona un dado base + un dado de color para tachar</p>
+      <h3>${t('game.action2.title')}</h3>
+      <p>${t('game.action2.instructions')}</p>
       ${warningHtml}
       <div class="action-options">
         ${data.availableColors.map(cd => {
           const base0Sum = data.bases[0] + cd.value;
           const base1Sum = data.bases[1] + cd.value;
-          const colorName = { red: 'Rojo', yellow: 'Amarillo', green: 'Verde', blue: 'Azul' }[cd.name];
+          const colorName = t('color.' + cd.name);
           const icon = { red: '🔴', yellow: '🟡', green: '🟢', blue: '🔵' }[cd.name];
           const valid0 = canMarkColor(cd.name, base0Sum);
           const valid1 = canMarkColor(cd.name, base1Sum);
@@ -425,7 +425,7 @@ const GameUI = {
             </button>
           `;
         }).join('')}
-        <button class="action-btn skip" id="btn-skip-action2">No tachar nada</button>
+        <button class="action-btn skip" id="btn-skip-action2">${t('game.action2.skip')}</button>
       </div>
       <div class="timer" id="action2-timer"></div>
     </div>`;
@@ -463,13 +463,13 @@ const GameUI = {
     modal.className = 'modal-overlay active game-over';
     modal.innerHTML = `
       <div class="modal-content">
-        <h2>🏆 ¡Partida Terminada!</h2>
+        <h2>${t('game.gameOver')}</h2>
         <ol class="results-list">
           ${results.map((r, i) => `
             <li class="${i === 0 ? 'winner' : ''}">
               <span class="rank">${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`}</span>
               <span class="name">${Chat.escape(r.username)}</span>
-              <span class="score">${r.score} pts</span>
+              <span class="score">${t('game.gameOver.pts', { score: r.score })}</span>
             </li>
           `).join('')}
         </ol>
@@ -478,13 +478,13 @@ const GameUI = {
             <div class="result-player">
               <strong>${Chat.escape(r.username)}</strong>
               <div>🔴 ${r.details.red} 🟡 ${r.details.yellow} 🟢 ${r.details.green} 🔵 ${r.details.blue}</div>
-              <div>Penalizaciones: ${r.penalties} (-${r.penalties * 5})</div>
-              <div>Total: <strong>${r.score}</strong></div>
+              <div>${t('game.gameOver.penalties', { n: r.penalties, m: r.penalties * 5 })}</div>
+              <div>${t('game.gameOver.total', { score: r.score })}</div>
             </div>
           `).join('')}
         </div>
         <div class="btn-row">
-          <button class="btn btn-primary" id="btn-return-lobby">Volver al Lobby</button>
+          <button class="btn btn-primary" id="btn-return-lobby">${t('game.returnLobby')}</button>
         </div>
       </div>
     `;
@@ -500,16 +500,16 @@ const GameUI = {
     const el = document.getElementById(elementId);
     if (!el) return;
     let remaining = seconds;
-    el.textContent = `⏱ ${remaining}s`;
+    el.textContent = t('game.timer', { n: remaining });
 
     const interval = setInterval(() => {
       remaining--;
       if (remaining <= 0) {
         clearInterval(interval);
-        el.textContent = '⏱ 0s';
+        el.textContent = t('game.timer', { n: 0 });
         return;
       }
-      el.textContent = `⏱ ${remaining}s`;
+      el.textContent = t('game.timer', { n: remaining });
       el.className = `timer${remaining <= 10 ? ' warning' : ''}`;
     }, 1000);
   },

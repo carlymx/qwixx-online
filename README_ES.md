@@ -51,6 +51,13 @@ Puntuación: `n × (n+1) / 2` por fila (donde n = números marcados), menos pena
 
 ## Changelog
 
+### v0.9.5 — 2026-06-22
+- Internacionalización (i18n): sistema completo de traducciones cliente+servidor mediante claves. Soporte inicial para español e inglés (124 claves cada uno).
+- Selector de idioma: el botón 🌐 ahora muestra un menú desplegable con los idiomas disponibles. Detección automática del navegador con persistencia en localStorage.
+- Cambio de idioma dinámico vía evento `langchanged` — sin recargar la página.
+- Mensajes del chat del servidor ahora usan claves i18n (`_key` + `_vars`). Cada jugador ve los mensajes en su propio idioma.
+- Versión actualizada a v0.9.5
+
 ### v0.9.4 — 2026-06-22
 - Estado de mesas en lobby: 3 estados (Esperando, Llena, Jugando) con botón Unirse desactivado cuando está llena
 - Corregido: mensajes de chat duplicados al entrar/salir de mesa
