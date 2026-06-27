@@ -71,7 +71,12 @@ const App = {
       return;
     }
     Storage.set('username', name);
-    this.socket.emit('set_username', { name });
+    const btn = document.getElementById('btn-login');
+    btn.disabled = true;
+    btn.textContent = '⏳';
+    document.getElementById('login-error').textContent = '';
+    this._loginAttempt = { name, attempt: 0 };
+    setTimeout(() => this.socket.emit('set_username', { name }), 500);
   },
 
   showView(viewName) {
@@ -188,6 +193,9 @@ const App = {
     });
 
     this.socket.on('login_success', (data) => {
+      this._loginAttempt = null;
+      const btn = document.getElementById('btn-login');
+      if (btn) { btn.disabled = false; btn.textContent = t('login.button'); }
       this.userId = data.id;
       this.username = data.username;
       document.getElementById('lobby-username').textContent = data.username;
@@ -197,8 +205,18 @@ const App = {
     });
 
     this.socket.on('error', (data) => {
-      const msg = data._key ? t(data._key, data._vars || {}) : data.message;
       const loginError = document.getElementById('login-error');
+      if (this._loginAttempt && data._key === 'login.error.taken') {
+        if (this._loginAttempt.attempt < 1) {
+          this._loginAttempt.attempt++;
+          setTimeout(() => this.socket.emit('set_username', { name: this._loginAttempt.name }), 2500);
+          return;
+        }
+        this._loginAttempt = null;
+        const btn = document.getElementById('btn-login');
+        if (btn) { btn.disabled = false; btn.textContent = t('login.button'); }
+      }
+      const msg = data._key ? t(data._key, data._vars || {}) : data.message;
       if (loginError) loginError.textContent = msg;
       Audio.playError();
     });
