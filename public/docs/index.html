@@ -546,7 +546,7 @@
     <!-- ═══════════════════════════════════════════════════ -->
     <section id="rng">
       <h2>6. Generación de Números Aleatorios</h2>
-      <p>Qwixx Online utiliza un sistema de aleatoriedad basado en <strong>CryptoPureSource</strong>, adaptado del documento de referencia <code>RNG_REFERENCE.md</code>.</p>
+      <p>Qwixx Online utiliza un sistema de aleatoriedad basado en <strong>CryptoPureSource</strong>.</p>
 
       <h4>Implementación</h4>
       <p>El servidor usa <code>crypto.randomBytes(4)</code> de Node.js para obtener 4 bytes de entropía del sistema operativo, y los convierte en un entero de 32 bits para cada dado.</p>
@@ -580,10 +580,10 @@
 
       <div class="callout info">
         <div class="callout-title">🔒 Seguridad</div>
-        <p>El servidor es la única fuente de verdad para la aleatoriedad. Esto previene cualquier manipulación por parte de los clientes y garantiza公平 para todos los jugadores.</p>
+        <p>El servidor es la única fuente de verdad para la aleatoriedad. Esto previene cualquier manipulación por parte de los clientes y garantiza números verdaderamente aleatorios para todos los jugadores.</p>
       </div>
 
-      <p>Para más detalles técnicos, consulta el archivo <code>RNG_REFERENCE.md</code> del proyecto.</p>
+      <p>Todo el proceso de aleatoriedad ocurre exclusivamente en el servidor, garantizando que ningún cliente pueda manipular los resultados.</p>
     </section>
 
     <!-- ═══════════════════════════════════════════════════ -->
