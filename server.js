@@ -29,6 +29,7 @@ app.get('/api/rankings', async (req, res) => {
 
 app.get('/api/stats', async (req, res) => {
   const stats = await db.loadStats();
+  stats.currentConnections = io.engine.clientsCount;
   stats.isConnected = db.isConnected();
   res.json(stats);
 });
@@ -50,7 +51,6 @@ io.on('connection', (socket) => {
   db.increment('totalConnections');
   const count = io.engine.clientsCount;
   db.peak('peakConnections', count);
-  db.setCurrentConnections(count);
 
   let currentUser = null;
 
@@ -68,10 +68,16 @@ io.on('connection', (socket) => {
       socket.emit('error', { _key: 'login.error.chars' });
       return;
     }
-    const exists = Array.from(connectedPlayers.values()).some(p => p.username === trimmed && p.connected);
-    if (exists) {
-      socket.emit('error', { _key: 'login.error.taken' });
-      return;
+    const existingEntry = Array.from(connectedPlayers.entries()).find(([, p]) => p.username === trimmed);
+    if (existingEntry) {
+      const [existingId] = existingEntry;
+      const existingSocket = playerSockets.get(existingId);
+      if (existingSocket && existingSocket.connected) {
+        socket.emit('error', { _key: 'login.error.taken' });
+        return;
+      }
+      connectedPlayers.delete(existingId);
+      playerSockets.delete(existingId);
     }
     currentUser = {
       id: socket.id,
@@ -380,7 +386,6 @@ io.on('connection', (socket) => {
       broadcastPlayers();
       broadcastTables();
     }
-    db.setCurrentConnections(io.engine.clientsCount);
   });
 
   function leaveCurrentTable() {

@@ -3,6 +3,17 @@
 > **Formato:** [Keep a Changelog](https://keepachangelog.com/)
 > **Versiones:** [SemVer](https://semver.org/)
 
+## [0.9.6] — 2026-06-28
+
+### Cambiado
+
+- **Conexiones actuales**: ahora se muestran en tiempo real desde `io.engine.clientsCount` en cada petición a `/api/stats`, sin persistir en la base de datos.
+
+### Corregido
+
+- **Bug crítico v0.9.5**: variable `t` sombreaba a la función traductora `t()` en `lobby.js:31` (`.map(t => ...)`), impidiendo que otros jugadores vieran las mesas.
+- **F5 race condition**: al recargar la página, el servidor ya no rechaza el nombre de usuario si el socket anterior aún no terminó de desconectarse. Verifica si el socket real sigue conectado antes de denegar.
+
 ## [0.9.5] — 2026-06-22
 
 ### Añadido

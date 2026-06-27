@@ -136,7 +136,7 @@ const Lobby = {
 
     container.innerHTML = `
       <span class="stats-db-indicator">${dbIndicator}</span>
-      <span class="stats-version">v0.9.5</span>
+      <span class="stats-version">v0.9.6</span>
       <span class="stats-sep">·</span>
       <span>🟢</span> <span class="stats-label">${t('stats.connections')}</span> <span class="stats-value">${stats.currentConnections}</span> <span class="stats-muted">${t('stats.peak', { n: stats.peakConnections })}</span>
       <span class="stats-sep">·</span>

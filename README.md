@@ -51,6 +51,13 @@ Scoring: `n × (n+1) / 2` per row (where n = marked numbers), minus penalties.
 
 ## Changelog
 
+### v0.9.6 — 2026-06-28
+- Current connections now real-time via `io.engine.clientsCount` (no longer persisted in DB)
+- Fixed critical bug: `t` variable shadowing the `t()` translation function in `lobby.js:31`, breaking table list for other players
+- Fixed F5 race condition: server no longer rejects username on page refresh if old socket hasn't fully disconnected yet
+- Rankings updated: 76 total games distributed among 11 players
+- Version bumped to v0.9.6
+
 ### v0.9.5 — 2026-06-22
 - Internationalization (i18n): full client+server translation system using keys. Initial support for Spanish and English (124 keys each).
 - Language selector: 🌐 button now shows a dropdown menu with available languages. Auto-detects browser language, persists in localStorage.
