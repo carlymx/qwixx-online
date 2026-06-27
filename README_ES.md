@@ -52,6 +52,7 @@ Puntuación: `n × (n+1) / 2` por fila (donde n = números marcados), menos pena
 ## Changelog
 
 ### v0.9.6 — 2026-06-28
+- Notificaciones de chat: tono + notificación del navegador cuando la página no está activa (visibilitychange, blur/focus)
 - Conexiones actuales ahora en tiempo real via `io.engine.clientsCount` (sin persistir en DB)
 - Corregido bug crítico: variable `t` sombreaba a la función `t()` en `lobby.js:31`, rompiendo la lista de mesas
 - Corregida race condition F5: el servidor ya no rechaza el nombre al recargar si el socket anterior no terminó de desconectarse

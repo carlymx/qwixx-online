@@ -36,6 +36,13 @@ function createChat(containerId, inputId, sendId) {
     }
     container.appendChild(el);
     container.scrollTop = container.scrollHeight;
+
+    if (!msg.system && App._pageFocused === false) {
+      Audio.playNotification();
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('Qwixx Online', { body: `${msg.username}: ${msg.text}`, icon: '/favicon.ico' });
+      }
+    }
   }
 
   if (input) input.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });

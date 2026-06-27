@@ -5,6 +5,10 @@
 
 ## [0.9.6] — 2026-06-28
 
+### Añadido
+
+- **Notificaciones de chat**: cuando el usuario no tiene la ventana activa, los mensajes de chat reproducen un tono de campanita y envían una notificación del navegador (si está permitido). Detectado via `visibilitychange`, `blur`/`focus`.
+
 ### Cambiado
 
 - **Conexiones actuales**: ahora se muestran en tiempo real desde `io.engine.clientsCount` en cada petición a `/api/stats`, sin persistir en la base de datos.

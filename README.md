@@ -52,6 +52,7 @@ Scoring: `n × (n+1) / 2` per row (where n = marked numbers), minus penalties.
 ## Changelog
 
 ### v0.9.6 — 2026-06-28
+- Chat notifications: sound + browser notification when page is not focused (visibilitychange, blur/focus)
 - Current connections now real-time via `io.engine.clientsCount` (no longer persisted in DB)
 - Fixed critical bug: `t` variable shadowing the `t()` translation function in `lobby.js:31`, breaking table list for other players
 - Fixed F5 race condition: server no longer rejects username on page refresh if old socket hasn't fully disconnected yet

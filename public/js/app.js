@@ -9,12 +9,24 @@ const App = {
   tableId: null,
   chatLobby: null,
   chatGame: null,
+  _pageFocused: true,
+  _notifPerm: 'default',
 
   init() {
     this.socket = io();
     this.setupSocketEvents();
     Theme.init();
     GameUI.loadSVGTemplate();
+
+    document.addEventListener('visibilitychange', () => {
+      this._pageFocused = !document.hidden;
+    });
+    window.addEventListener('blur', () => { this._pageFocused = false; });
+    window.addEventListener('focus', () => { this._pageFocused = true; });
+
+    if ('Notification' in window && Notification.permission === 'default') {
+      document.addEventListener('click', () => Notification.requestPermission().then(p => { this._notifPerm = p; }), { once: true });
+    }
 
     const saved = Storage.get('username');
     if (saved) {

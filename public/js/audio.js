@@ -101,5 +101,23 @@ const Audio = {
     osc.connect(gain).connect(this.ctx.destination);
     osc.start();
     osc.stop(this.ctx.currentTime + 0.2);
+  },
+
+  playNotification() {
+    this.ensure();
+    if (!this.ctx) return;
+    const t0 = this.ctx.currentTime;
+    [660, 880].forEach((freq, i) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      const t = t0 + i * 0.12;
+      osc.frequency.setValueAtTime(freq, t);
+      gain.gain.setValueAtTime(0.12, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+      osc.connect(gain).connect(this.ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.15);
+    });
   }
 };
